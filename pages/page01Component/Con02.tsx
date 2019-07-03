@@ -11,19 +11,17 @@ import {
 } from 'react-native';
 import ShopSingle from './Single';
 import FETCH from '../../methods/Fetch';
+import { HOMEPAGE_SHOP_LIST } from '../../methods/sqlStatements';
 
 const {width} = Dimensions.get('window');
 
-interface Props {
-    navigation: any
-}
+interface Props {}
 
 export default function Con02Component(props: Props) {
     const [shopMsg, setShopMsg] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const getShopMsg = useCallback(() => {
-        let statements = `SELECT product_id, shop_id, shop_pic, shop_pri, shop_name, shop_txt FROM shopMsg`;
-        FETCH({statements}).then(data => {
+        FETCH({statements: HOMEPAGE_SHOP_LIST}).then(data => {
             let obj = {};
             let arr = [];
             data.forEach((item: any) => {
@@ -71,7 +69,7 @@ export default function Con02Component(props: Props) {
             <View style={styles.box}>
                 <FlatList
                     data={shopMsg}
-                    renderItem={({item, index}) => (<ShopSingle singleData={item} key={index} navigation={props.navigation}/>)}
+                    renderItem={({item, index}) => (<ShopSingle singleData={item} key={index}/>)}
                     refreshing={isLoading}
                     ListFooterComponent={fooComponent}
                     onEndReached={_endReached}
@@ -91,12 +89,6 @@ const styles = StyleSheet.create({
     box: {
         width: width,
         flexWrap: 'wrap'
-    },
-    show: {
-        display: 'flex'
-    },
-    none: {
-        display: 'none'
     },
     indicatorView: {
         marginBottom: 20,

@@ -42,7 +42,7 @@ export default class WelcomePage extends PureComponent<Props, any> {
     render () {
         return(
             <View style={styles.container}>
-                <View style={{'marginBottom': 15}}><Text style={{'fontSize': 20}}>WelcomePage</Text></View>
+                <View style={{'marginBottom': 15}}><Text style={{'fontSize': 20}}>Welcome Kcos</Text></View>
                 <View><Text style={{'fontSize': 16}}>{this.state.timer}</Text></View>
             </View>
         )

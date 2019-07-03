@@ -5,6 +5,8 @@ import {
     Button,
     StyleSheet
 } from 'react-native';
+import NavigatorUtil from '../methods/NavigatorUtil';
+import {setUserId} from '../methods/util';
 
 interface Props {
     navigation: {
@@ -14,7 +16,6 @@ interface Props {
 
 export default class Login extends Component<Props, any> {
     render () {
-        const {navigation} = this.props;
         return(
             <View style={styles.Page}>
                 <View style={styles.header}>
@@ -29,9 +30,10 @@ export default class Login extends Component<Props, any> {
 
                 </View>
                 <Button
-                    title={'Go To HomePage'}
+                    title={'登 录'}
                     onPress={() => {
-                        navigation.navigate('HomePage');
+                        setUserId('12312312');
+                        NavigatorUtil.goPage('HomePage');
                     }}
                 />
             </View>
@@ -61,8 +63,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '600'
     },
-    loginForm: {},
-    f20: {
-        fontSize: 20
-    }
+    loginForm: {}
 });

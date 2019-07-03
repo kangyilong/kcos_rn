@@ -8,12 +8,12 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native';
+import NavigatorUtil from '../../methods/NavigatorUtil';
 
 const {width} = Dimensions.get('window');
 
 interface Props {
-    singleData: Array<any>,
-    navigation: any
+    singleData: Array<any>
 }
 
 export default function ShopSingle(props: Props) {
@@ -32,11 +32,11 @@ export default function ShopSingle(props: Props) {
     return (
         <TouchableOpacity
             onPress={() => {
-                props.navigation.navigate('StorePage', {
-                    name: 'kylong',
+                NavigatorUtil.goPage('StorePage', {
+                    name: props.singleData[selIndex].shop_name,
                     productId: props.singleData[selIndex].product_id,
                     selIndex
-                })
+                });
             }}
             style={styled.single}
         >
@@ -120,11 +120,5 @@ const styled = StyleSheet.create({
         fontSize: 17,
         color: '#c30a18',
         textAlign: 'center'
-    },
-    none: {
-        display: 'none'
-    },
-    show: {
-        display: 'flex'
     }
 });

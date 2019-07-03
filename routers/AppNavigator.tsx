@@ -1,13 +1,11 @@
-import React from 'react';
 import {
     Button,
     Image
 } from 'react-native';
-import HomePage from '../pages/HomePage';
-import PersonalCenter from '../pages/PersonalCenter';
 import StorePage from '../pages/StorePage';
 import Login from '../pages/Login';
 import WelcomePage from '../pages/WelcomePage';
+import OwnerOrder from '../pages/PersonalComponent/PersonalOptionList/OwnerOrder';
 import {
     createStackNavigator,
     createBottomTabNavigator,
@@ -15,52 +13,15 @@ import {
     createDrawerNavigator,
     createSwitchNavigator
 } from 'react-navigation';
-import User from 'react-native-vector-icons/AntDesign';
-import Store from 'react-native-vector-icons/MaterialIcons';
-
-const BottomNavigator = createBottomTabNavigator({
-    HomePage: {
-        screen: HomePage,
-        navigationOptions: {
-            tabBarLabel: '商城',
-            tabBarIcon: ({focused, tintColor}) => (
-                <Store
-                    name='store'
-                    size={24}
-                    color={tintColor}
-                    paddingTop={10}
-                />
-            )
-        }
-    },
-    PersonalCenter: {
-        screen: PersonalCenter,
-        navigationOptions: {
-            tabBarLabel: '个人中心',
-            tabBarIcon: ({focused, tintColor}) => (
-                <User
-                    name='user'
-                    size={20}
-                    color={tintColor}
-                    paddingTop={10}
-                />
-            )
-        }
-    }
-}, {
-    tabBarOptions: {
-        activeTintColor: '#4BC1D2',
-        inactiveTintColor: '#000',
-        showIcon: true,
-        labelStyle: {
-            fontSize: 13
-        }
-    }
-});
+import BottomNavigator from './BottomNavigator';
+import TopNavigator from './TopNavigator';
 
 const AppNavigator = createStackNavigator({
     BottomNavigator: {
         screen: BottomNavigator
+    },
+    TopNavigator: {
+        screen: TopNavigator
     },
     Login: {
         screen: Login,
@@ -77,7 +38,11 @@ const AppNavigator = createStackNavigator({
                 title: params.name ? params.name : 'StorePage'
             }
         }
-    }
+    },
+    // OwnerOrder: {
+    //     screen: OwnerOrder,
+    //     navigationOptions: () => ({title: '订单列表'})
+    // }
 });
 
 const SwitchNavigator = createSwitchNavigator({

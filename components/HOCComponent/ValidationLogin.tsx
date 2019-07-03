@@ -6,18 +6,24 @@ interface Props {
 }
 export default function VislidationLogin(Wc) {
     return class extends PureComponent<Props, any>{
+        private _navListener: any;
         state = {
             isLogin: false
         };
-        async componentDidMount() {
-            const booLogin = await isLogin();
-            if(booLogin) {
-                this.setState({
-                    isLogin: booLogin
-                });
-            } else {
-                this.props.navigation.navigate('Login');
-            }
+        componentDidMount() {
+            this._navListener = this.props.navigation.addListener('didFocus', async () => {
+                const booLogin = await isLogin();
+                if(booLogin) {
+                    this.setState({
+                        isLogin: booLogin
+                    });
+                } else {
+                    this.props.navigation.navigate('Login');
+                }
+            });
+        }
+        componentWillUnmount() {
+            this._navListener.remove();
         }
         render() {
             if(this.state.isLogin) {

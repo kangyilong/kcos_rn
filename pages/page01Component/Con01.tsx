@@ -49,9 +49,6 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1
     },
-    f20: {
-        fontSize: 20
-    },
     text: {
         fontSize: 12
     },

@@ -10,24 +10,28 @@ import {
     SafeAreaView,
     ScrollView
 } from 'react-native';
+import NavigatorUtil from '../methods/NavigatorUtil';
 import SwiperComponent from '../components/swiper/Swiper';
 import Con01Component from './page01Component/Con01';
 import Con02Component from './page01Component/Con02';
 import FETCH from '../methods/Fetch';
+import { HOMEPAGE_BANNER } from '../methods/sqlStatements';
 
 const { width, height } = Dimensions.get('window');
 
 interface Props {
     navigation: {
-        navigate: Function
+        navigate: Function,
+        addListener: Function
     }
 }
 export default class HomePage extends Component<Props, any> {
+    private _navListener: any;
     state = {
         swiperData: []
     };
     componentDidMount() {
-        FETCH({statements: 'SELECT * FROM bannerMsg'}).then(data => {
+        FETCH({statements: HOMEPAGE_BANNER}).then(data => {
             let picData = data.map(item => ({
                 sourceUrl: item.banner_pic,
                 bannerHref: item.banner_href
@@ -35,10 +39,17 @@ export default class HomePage extends Component<Props, any> {
             this.setState({
                 swiperData: picData
             })
-        })
+        });
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            console.log('home');
+        });
+    }
+    componentWillUnmount() {
+        this._navListener.remove();
     }
     render () {
         const {navigation} = this.props;
+        NavigatorUtil.navigation = navigation;
         return(
             <ScrollView>
                 <SafeAreaView style={styles.Page}>
@@ -56,7 +67,7 @@ export default class HomePage extends Component<Props, any> {
                             </View>)
                     }
                     <Con01Component />
-                    <Con02Component navigation={navigation}/>
+                    <Con02Component/>
                 </SafeAreaView>
             </ScrollView>
         )
@@ -68,12 +79,6 @@ const styles = StyleSheet.create({
         minHeight: height,
         backgroundColor: '#f5f5f5',
         paddingBottom: 30
-    },
-    flex: {
-        flex: 1
-    },
-    f20: {
-        fontSize: 20
     },
     swiper: {
         height: 100
