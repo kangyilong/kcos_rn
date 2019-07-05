@@ -5,7 +5,7 @@ import {
 import StorePage from '../pages/StorePage';
 import Login from '../pages/Login';
 import WelcomePage from '../pages/WelcomePage';
-import OwnerOrder from '../pages/PersonalComponent/PersonalOptionList/OwnerOrder';
+import OwnerCollection from '../pages/PersonalComponent/PersonalOptionList/OwnerCollection';
 import {
     createStackNavigator,
     createBottomTabNavigator,
@@ -17,10 +17,10 @@ import BottomNavigator from './BottomNavigator';
 import TopNavigator from './TopNavigator';
 
 const AppNavigator = createStackNavigator({
-    BottomNavigator: {
+    BottomNavigator: { // 底部tab
         screen: BottomNavigator
     },
-    TopNavigator: {
+    TopNavigator: { // 顶部tab
         screen: TopNavigator
     },
     Login: {
@@ -29,7 +29,7 @@ const AppNavigator = createStackNavigator({
             header: null
         }
     },
-    StorePage: {
+    StorePage: { // 商品详情页
         screen: StorePage,
         navigationOptions: ({navigation}) => {
             const { state } = navigation;
@@ -39,10 +39,10 @@ const AppNavigator = createStackNavigator({
             }
         }
     },
-    // OwnerOrder: {
-    //     screen: OwnerOrder,
-    //     navigationOptions: () => ({title: '订单列表'})
-    // }
+    OwnerCollection: { // 用户收藏页
+        screen: OwnerCollection,
+        navigationOptions: () => ({title: '商品收藏'})
+    }
 });
 
 const SwitchNavigator = createSwitchNavigator({

@@ -5131,6 +5131,11 @@ react-native-camera@^2.11.0:
   dependencies:
     prop-types "^15.6.2"
 
+react-native-device-info@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npm.taobao.org/react-native-device-info/download/react-native-device-info-2.2.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-native-device-info%2Fdownload%2Freact-native-device-info-2.2.1.tgz#0c14285927fc7beeaf9241ea1ded90f5d5ebf836"
+  integrity sha1-DBQoWSf8e+6vkkHqHe2Q9dXr+DY=
+
 react-native-gesture-handler@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/react-native-gesture-handler/download/react-native-gesture-handler-1.2.1.tgz#9c48fb1ab13d29cece24bbb77b1e847eebf27a2b"

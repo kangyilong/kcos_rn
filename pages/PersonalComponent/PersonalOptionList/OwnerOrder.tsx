@@ -3,12 +3,13 @@ import {
     View
 } from 'react-native';
 import OrderStatusComponent from './OrderStatus/OrderStatusComponent/Index';
-import { OWNERORDER_ALL } from '../../../methods/sqlStatements';
+import {OWNERORDER_ALL} from '../../../methods/sqlStatements';
 
-export default class OwnerOrder extends PureComponent {
+class OwnerOrder extends PureComponent {
     render() {
         return (
-            <OrderStatusComponent QUERY_SQL={OWNERORDER_ALL}/>
+            <OrderStatusComponent QUERY_SQL={OWNERORDER_ALL} tigText={'暂无订单'}/>
         )
     }
 }
+export default OwnerOrder;

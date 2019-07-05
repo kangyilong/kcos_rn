@@ -35,6 +35,7 @@ export default class PersonalContainer extends PureComponent {
                 NavigatorUtil.goPage('OwnerOrder');
                 break;
             case '1':
+                NavigatorUtil.goPage('OwnerCollection');
                 break;
             case '2':
                 break;
@@ -50,6 +51,7 @@ export default class PersonalContainer extends PureComponent {
                 {
                     singleList.map(item => (
                         <TouchableOpacity
+                            activeOpacity={0.9}
                             key={item.id}
                             onPress={() => this.toLookDetail(item.id)}
                         >

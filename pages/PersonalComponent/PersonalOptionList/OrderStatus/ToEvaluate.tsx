@@ -15,7 +15,7 @@ export default class ToEvaluate extends PureComponent {
     }
     render() {
         return (
-            <OrderStatusComponent QUERY_SQL={OWNERORDER_DPJ}/>
+            <OrderStatusComponent QUERY_SQL={OWNERORDER_DPJ} tigText={'暂无待评价订单'}/>
         )
     }
 }

@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import NavigatorUtil from '../methods/NavigatorUtil';
-import {delUserId} from '../methods/util';
-import {actionTintColor} from '../redux/action';
+import {delUserId, getUserId} from '../methods/util';
+import {actionTintColor, actionUserId} from '../redux/action';
 import PersonalHeader from './PersonalComponent/PersonalHeader';
 import PersonalContainer from './PersonalComponent/PersonalContainer';
 
@@ -20,12 +20,14 @@ interface Props {
     },
     isFocused: boolean,
     actionTintColorFn: Function,
+    actionUserIdFn: Function,
     tintColor: string
 }
 
 function mapStateToProps(state) {
     return {
-        tintColor: state.changeTintColor
+        tintColor: state.changeTintColor,
+        userId: state.saveUserId
     }
 }
 
@@ -33,11 +35,18 @@ function mapDispatchToProps(dispatch) {
     return {
         actionTintColorFn(color) {
             dispatch(actionTintColor(color));
+        },
+        actionUserIdFn(userId) {
+            dispatch(actionUserId(userId));
         }
     }
 }
 
 class PersonalCenter extends Component<Props, any> {
+    async componentDidMount() {
+        const userId = await getUserId();
+        this.props.actionUserIdFn(userId);
+    }
     render () {
         const { tintColor } = this.props;
         return(

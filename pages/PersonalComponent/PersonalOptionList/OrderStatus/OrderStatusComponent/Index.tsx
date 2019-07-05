@@ -9,39 +9,46 @@ import {
 } from 'react-native';
 import NoData from '../../../../../components/noData/NoData';
 import SingleOrder from '../../SingleComponent/SingleOrder';
+import Loading from '../../../../../components/loading/Loading';
 import Fetch from '../../../../../methods/Fetch';
-import {mergeAttribute} from '../../../../../methods/util';
+import {getUserId, mergeAttribute, replaceStr} from '../../../../../methods/util';
 import appStyles from '../../../../styles/appStyles';
 
 interface Props {
-    QUERY_SQL: string
+    QUERY_SQL: string,
+    tigText: string
 }
 
-export default class OrderStatusComponent extends PureComponent<Props, any> {
+class OrderStatusComponent extends PureComponent<Props, any> {
     state = {
         orderData: [],
-        isLoading: false
+        isLoading: false,
+        isLoadOk: false
     };
 
     componentDidMount() {
-        const { QUERY_SQL } = this.props;
-        Fetch({statements: QUERY_SQL}).then(data => {
-            let arr = mergeAttribute(data);
-            this.setState({
-                orderData: arr
-            })
+        getUserId().then(userId => {
+            const { QUERY_SQL } = this.props;
+            let str = replaceStr(QUERY_SQL, userId);
+            Fetch({statements: str}).then(data => {
+                let arr = mergeAttribute(data);
+                this.setState({
+                    orderData: arr,
+                    isLoadOk: true
+                })
+            });
         });
     }
 
     fooComponent = () => {
         if (this.state.isLoading) {
             return (
-                <View style={styles.indicatorView}>
+                <View style={appStyles.indicatorView}>
                     <ActivityIndicator
-                        style={styles.indicator}
+                        style={appStyles.indicator}
                         animating={true}
                     />
-                    <Text style={styles.indicatorText}>loading...</Text>
+                    <Text style={appStyles.indicatorText}>loading...</Text>
                 </View>
             )
         } else {
@@ -50,36 +57,30 @@ export default class OrderStatusComponent extends PureComponent<Props, any> {
     };
 
     render() {
-        const {orderData, isLoading} = this.state;
-        return (
-            <View style={appStyles.flex}>
-                <FlatList
-                    data={orderData}
-                    renderItem={({item}) => <SingleOrder singleOrderData={item} key={item.code}/>}
-                    refreshing={isLoading}
-                    ListFooterComponent={this.fooComponent}
-                    onEndReachedThreshold={0.5}
-                    ListEmptyComponent={() => <NoData tigText="暂无订单哦"/>}
-                />
-            </View>
-        )
+        const {orderData, isLoading, isLoadOk} = this.state;
+        if(!isLoadOk) {
+            return <Loading />
+        }else {
+            return (
+                <View style={appStyles.flex}>
+                    <FlatList
+                        data={orderData}
+                        renderItem={({item}) => <SingleOrder singleOrderData={item} key={item.code}/>}
+                        refreshing={isLoading}
+                        ListFooterComponent={this.fooComponent}
+                        onEndReachedThreshold={0.5}
+                        ListEmptyComponent={() => <NoData tigText={this.props.tigText}/>}
+                    />
+                </View>
+            )
+        }
     }
 }
 
 const styles = StyleSheet.create({
     owner_order: {
         paddingRight: 10
-    },
-    indicatorView: {
-        marginBottom: 20,
-        alignItems: 'center',
-        paddingTop: 10
-    },
-    indicator: {
-        marginBottom: 10
-    },
-    indicatorText: {
-        color: 'green',
-        fontSize: 15
     }
 });
+
+export default OrderStatusComponent;

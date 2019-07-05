@@ -59,7 +59,10 @@ export default class PersonalHeader extends PureComponent<Props, any> {
         const { tintColor } = this.props;
         return (
             <View style={styles.personal_header}>
-                <TouchableOpacity onPress={() => this.openMyCamera()}>
+                <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => this.openMyCamera()}
+                >
                     <View style={styles.left_box}>
                         <Image
                             style={styles.left_img}

@@ -15,7 +15,7 @@ export default class ToSendTheGoods extends PureComponent {
     }
     render() {
         return (
-            <OrderStatusComponent QUERY_SQL={OWNERORDER_DFH}/>
+            <OrderStatusComponent QUERY_SQL={OWNERORDER_DFH} tigText={'暂无待发货订单'}/>
         )
     }
 }

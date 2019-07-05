@@ -32,7 +32,7 @@ export default class Login extends Component<Props, any> {
                 <Button
                     title={'登 录'}
                     onPress={() => {
-                        setUserId('12312312');
+                        setUserId('kcos131415485718985843628');
                         NavigatorUtil.goPage('HomePage');
                     }}
                 />

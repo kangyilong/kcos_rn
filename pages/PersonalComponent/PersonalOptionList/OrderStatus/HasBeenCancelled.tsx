@@ -15,7 +15,7 @@ export default class HasBeenCancelled extends PureComponent {
     }
     render() {
         return (
-            <OrderStatusComponent QUERY_SQL={OWNERORDER_YQX}/>
+            <OrderStatusComponent QUERY_SQL={OWNERORDER_YQX} tigText={'暂无已取消订单'}/>
         )
     }
 }

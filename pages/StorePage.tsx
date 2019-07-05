@@ -8,8 +8,7 @@ import {
     Dimensions,
     FlatList,
     RefreshControl,
-    ActivityIndicator,
-    TouchableOpacity
+    ActivityIndicator
 } from 'react-native';
 import HeadComponent from './page02Component/HeadComponent';
 import MoreShopComponent from './MoreShopComponent';
@@ -22,7 +21,7 @@ interface Props {
             params: {
                 name: string,
                 productId: string,
-                selIndex: number
+                shopId: string
             }
         }
     }

@@ -15,7 +15,7 @@ export default class ForThePayment extends PureComponent {
     }
     render() {
         return (
-            <OrderStatusComponent QUERY_SQL={OWNERORDER_DFK}/>
+            <OrderStatusComponent QUERY_SQL={OWNERORDER_DFK} tigText={'暂无待付款订单'}/>
         )
     }
 }

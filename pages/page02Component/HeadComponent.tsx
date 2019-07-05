@@ -24,7 +24,7 @@ interface Props {
             params: {
                 name: string,
                 productId: string,
-                selIndex: number
+                shopId: string
             }
         }
     }
@@ -44,11 +44,15 @@ export default function(props: Props) {
             }, 1000);
             return;
         }
-        setIndex(params.selIndex);
         FETCH({
             statements: `SELECT shop_id, shop_pic, shop_pri, shop_Num, shop_txt, shop_name FROM shopMsg WHERE product_id = '${params.productId}'`
         }).then(data => {
             setHeaderImageData(data);
+            data.forEach((item, index) => {
+                if(item.shop_id === params.shopId) {
+                    setIndex(index);
+                }
+            });
             Image.getSize(data[0].shop_pic, (width, height) => {
                 setImgSize(height / width);
             }, (err) => {
@@ -74,6 +78,7 @@ export default function(props: Props) {
                             {
                                 headerImageData.map((imageItem, index) => (
                                     <TouchableOpacity
+                                        activeOpacity={0.9}
                                         key={index}
                                         onPress={() => {
                                             setIndex(index)

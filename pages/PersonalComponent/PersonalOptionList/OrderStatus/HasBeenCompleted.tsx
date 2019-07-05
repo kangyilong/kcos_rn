@@ -15,7 +15,7 @@ export default class HasBeenCompleted extends PureComponent {
     }
     render() {
         return (
-            <OrderStatusComponent QUERY_SQL={OWNERORDER_YWC}/>
+            <OrderStatusComponent QUERY_SQL={OWNERORDER_YWC} tigText={'暂无已完成订单'}/>
         )
     }
 }

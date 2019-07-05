@@ -32,6 +32,9 @@ export default {
     textColor: {
         color: '#091E42'
     },
+    textColor333: {
+        color: '#333'
+    },
     price: {
         color: '#f96868'
     },
@@ -47,5 +50,17 @@ export default {
     },
     align_items: {
         alignItems: 'center'
+    },
+    indicatorView: {
+        marginBottom: 20,
+        alignItems: 'center',
+        paddingTop: 10
+    },
+    indicator: {
+        marginBottom: 10
+    },
+    indicatorText: {
+        color: 'green',
+        fontSize: 15
     }
 }

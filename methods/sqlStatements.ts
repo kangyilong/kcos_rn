@@ -6,12 +6,38 @@ export const HOMEPAGE_BANNER = 'SELECT * FROM bannerMsg';
 /*
 * 查找首页全部商品
 * */
-export const HOMEPAGE_SHOP_LIST = 'SELECT product_id, shop_id, shop_pic, shop_pri, shop_name, shop_txt FROM shopMsg';
+export const HOMEPAGE_SHOP_LIST = `SELECT
+    product_id,
+    shop_id,
+    shop_pic,
+    shop_pri,
+    shop_name,
+    shop_txt
+    FROM
+    shopMsg`;
+
+/*
+* 用户收藏
+* */
+export const USER_COLLECTION_LIST = `SELECT
+    u.product_id,
+    u.shop_id,
+    s.shop_pic,
+    s.shop_pri,
+    s.shop_name
+    FROM
+    userCollection AS u
+    LEFT JOIN
+    shopMsg AS s
+    ON
+    u.shop_id = s.shop_id
+    WHERE
+    u.user_id = '@'`;
 
 /*
 * 获取我的全部订单
 * */
-export const OWNERORDER_ALL = `
+export let OWNERORDER_ALL = `
     SELECT dd.cvalue AS psTypeName, uuuu.*
     FROM
     (SELECT d.cvalue AS zfTypeName, uuu.*
@@ -20,6 +46,7 @@ export const OWNERORDER_ALL = `
     s.shop_pic AS shopPic,
     s.shop_name AS shopName,
     s.shop_Num AS shopNum,
+    s.product_id,
     uu.*
     FROM
     (SELECT
@@ -38,7 +65,12 @@ export const OWNERORDER_ALL = `
     LEFT JOIN
     orderMsg AS o
     ON
-    u.code = o.p_code) AS uu
+    u.code = o.p_code
+    WHERE
+    u.user_id = '@'
+    ORDER BY
+    orderTime
+    ) AS uu
     LEFT JOIN
     shopMsg AS s
     ON
@@ -63,7 +95,7 @@ export const OWNERORDER_ALL = `
 /*
 * 获取我的待付款订单
 * */
-export const OWNERORDER_DFK = `
+export let OWNERORDER_DFK = `
     SELECT dd.cvalue AS psTypeName, uuuu.*
     FROM
     (SELECT d.cvalue AS zfTypeName, uuu.*
@@ -72,6 +104,7 @@ export const OWNERORDER_DFK = `
     s.shop_pic AS shopPic,
     s.shop_name AS shopName,
     s.shop_Num AS shopNum,
+    s.product_id,
     uu.*
     FROM
     (SELECT
@@ -93,6 +126,10 @@ export const OWNERORDER_DFK = `
     u.code = o.p_code
     WHERE
     u.o_status = '待付款'
+    AND
+    u.user_id = '@'
+    ORDER BY
+    orderTime
     ) AS uu
     LEFT JOIN
     shopMsg AS s
@@ -117,7 +154,7 @@ export const OWNERORDER_DFK = `
 /*
 * 获取我的待发货订单
 * */
-export const OWNERORDER_DFH = `
+export let OWNERORDER_DFH = `
     SELECT dd.cvalue AS psTypeName, uuuu.*
     FROM
     (SELECT d.cvalue AS zfTypeName, uuu.*
@@ -126,6 +163,7 @@ export const OWNERORDER_DFH = `
     s.shop_pic AS shopPic,
     s.shop_name AS shopName,
     s.shop_Num AS shopNum,
+    s.product_id,
     uu.*
     FROM
     (SELECT
@@ -147,6 +185,10 @@ export const OWNERORDER_DFH = `
     u.code = o.p_code
     WHERE
     u.o_status = '待发货'
+    AND
+    u.user_id = '@'
+    ORDER BY
+    orderTime
     ) AS uu
     LEFT JOIN
     shopMsg AS s
@@ -171,7 +213,7 @@ export const OWNERORDER_DFH = `
 /*
 * 获取我的待收货订单
 * */
-export const OWNERORDER_DSH = `
+export let OWNERORDER_DSH = `
     SELECT dd.cvalue AS psTypeName, uuuu.*
     FROM
     (SELECT d.cvalue AS zfTypeName, uuu.*
@@ -180,6 +222,7 @@ export const OWNERORDER_DSH = `
     s.shop_pic AS shopPic,
     s.shop_name AS shopName,
     s.shop_Num AS shopNum,
+    s.product_id,
     uu.*
     FROM
     (SELECT
@@ -201,6 +244,10 @@ export const OWNERORDER_DSH = `
     u.code = o.p_code
     WHERE
     u.o_status = '待收货'
+    AND
+    u.user_id = '@'
+    ORDER BY
+    orderTime
     ) AS uu
     LEFT JOIN
     shopMsg AS s
@@ -225,7 +272,7 @@ export const OWNERORDER_DSH = `
 /*
 * 获取我的待评价订单
 * */
-export const OWNERORDER_DPJ = `
+export let OWNERORDER_DPJ = `
     SELECT dd.cvalue AS psTypeName, uuuu.*
     FROM
     (SELECT d.cvalue AS zfTypeName, uuu.*
@@ -234,6 +281,7 @@ export const OWNERORDER_DPJ = `
     s.shop_pic AS shopPic,
     s.shop_name AS shopName,
     s.shop_Num AS shopNum,
+    s.product_id,
     uu.*
     FROM
     (SELECT
@@ -255,6 +303,10 @@ export const OWNERORDER_DPJ = `
     u.code = o.p_code
     WHERE
     u.o_status = '待评价'
+    AND
+    u.user_id = '@'
+    ORDER BY
+    orderTime
     ) AS uu
     LEFT JOIN
     shopMsg AS s
@@ -279,7 +331,7 @@ export const OWNERORDER_DPJ = `
 /*
 * 获取我的已完成订单
 * */
-export const OWNERORDER_YWC = `
+export let OWNERORDER_YWC = `
     SELECT dd.cvalue AS psTypeName, uuuu.*
     FROM
     (SELECT d.cvalue AS zfTypeName, uuu.*
@@ -288,6 +340,7 @@ export const OWNERORDER_YWC = `
     s.shop_pic AS shopPic,
     s.shop_name AS shopName,
     s.shop_Num AS shopNum,
+    s.product_id,
     uu.*
     FROM
     (SELECT
@@ -309,6 +362,10 @@ export const OWNERORDER_YWC = `
     u.code = o.p_code
     WHERE
     u.o_status = '已完成'
+    AND
+    u.user_id = '@'
+    ORDER BY
+    orderTime
     ) AS uu
     LEFT JOIN
     shopMsg AS s
@@ -333,7 +390,7 @@ export const OWNERORDER_YWC = `
 /*
 * 获取我的已取消订单
 * */
-export const OWNERORDER_YQX = `
+export let OWNERORDER_YQX = `
     SELECT dd.cvalue AS psTypeName, uuuu.*
     FROM
     (SELECT d.cvalue AS zfTypeName, uuu.*
@@ -342,6 +399,7 @@ export const OWNERORDER_YQX = `
     s.shop_pic AS shopPic,
     s.shop_name AS shopName,
     s.shop_Num AS shopNum,
+    s.product_id,
     uu.*
     FROM
     (SELECT
@@ -363,6 +421,10 @@ export const OWNERORDER_YQX = `
     u.code = o.p_code
     WHERE
     u.o_status = '已取消'
+    AND
+    u.user_id = '@'
+    ORDER BY
+    orderTime
     ) AS uu
     LEFT JOIN
     shopMsg AS s

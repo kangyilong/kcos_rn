@@ -31,11 +31,12 @@ export default function ShopSingle(props: Props) {
     }, []);
     return (
         <TouchableOpacity
+            activeOpacity={0.9}
             onPress={() => {
                 NavigatorUtil.goPage('StorePage', {
                     name: props.singleData[selIndex].shop_name,
                     productId: props.singleData[selIndex].product_id,
-                    selIndex
+                    shopId: props.singleData[selIndex].shop_id
                 });
             }}
             style={styled.single}
@@ -49,7 +50,9 @@ export default function ShopSingle(props: Props) {
                     <View style={styled.solt}>
                         {
                             props.singleData.length > 0 && props.singleData.map((soltItem, index) => (
-                              <TouchableOpacity onPress={() => {
+                              <TouchableOpacity
+                                  activeOpacity={0.9}
+                                  onPress={() => {
                                   setSelIndex(index);
                               }} key={index}>
                                   <View

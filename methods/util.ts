@@ -16,6 +16,15 @@ export async function delUserId() {
     await AsyncStorage.removeItem('userId');
 }
 
+// 将sql语句中@占位符替换成userId
+export function replaceStr(str, userId) {
+    if(typeof str === 'string') {
+        let list = str.split('@');
+        list[0] = list[0] + userId;
+        return list.join('');
+    }
+}
+
 // 将订单的相同code合并为一个数组
 export function mergeAttribute(data) {
     if(!Array.isArray(data)) {
@@ -31,6 +40,7 @@ export function mergeAttribute(data) {
                 shopPic: item.shopPic,
                 shopPrice: item.shopPrice,
                 shop_id: item.shop_id,
+                product_id: item.product_id,
                 shopVal: item.shopVal
             });
         }else {
@@ -47,6 +57,7 @@ export function mergeAttribute(data) {
                 shopPic: item.shopPic,
                 shopPrice: item.shopPrice,
                 shop_id: item.shop_id,
+                product_id: item.product_id,
                 shopVal: item.shopVal
             };
             obj[item.code] = o;

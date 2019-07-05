@@ -1,4 +1,4 @@
-import { ACTION_TINT_COLOR } from './actionType';
+import { ACTION_TINT_COLOR, ACTION_USER_ID } from './actionType';
 import { combineReducers } from 'redux';
 
 function changeTintColor(state = {}, action) {
@@ -8,6 +8,14 @@ function changeTintColor(state = {}, action) {
     }
 }
 
+function saveUserId(state = {}, action) {
+    switch (action.type) {
+        case ACTION_USER_ID: return action.userId;
+        default: return '';
+    }
+}
+
 export default combineReducers({
-    changeTintColor
+    changeTintColor,
+    saveUserId
 })
