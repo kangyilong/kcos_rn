@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text,
@@ -19,7 +19,7 @@ interface Props {
     tigText: string
 }
 
-class OrderStatusComponent extends PureComponent<Props, any> {
+class OrderStatusComponent extends React.PureComponent<Props, any> {
     state = {
         orderData: [],
         isLoading: false,

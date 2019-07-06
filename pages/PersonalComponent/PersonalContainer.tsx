@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text,
@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import NavigatorUtil from '../../methods/NavigatorUtil';
 import appStyles from '../styles/appStyles';
+import OwnerConsumption from "./PersonalOptionList/OwnerConsumption";
 
 const singleList = [
     {
@@ -28,7 +29,7 @@ const singleList = [
     }
 ];
 
-export default class PersonalContainer extends PureComponent {
+export default class PersonalContainer extends React.PureComponent {
     toLookDetail = (id) => {
         switch(id) {
             case '0':
@@ -38,8 +39,10 @@ export default class PersonalContainer extends PureComponent {
                 NavigatorUtil.goPage('OwnerCollection');
                 break;
             case '2':
+                NavigatorUtil.goPage('OwnerConsumption');
                 break;
             case '3':
+                NavigatorUtil.goPage('OwnerAddress');
                 break;
             case '4':
                 break;

@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text,
@@ -29,7 +29,7 @@ interface Props {
 
 const { width, height } = Dimensions.get('window');
 
-export default class StorePage extends PureComponent<Props, any> {
+export default class StorePage extends React.PureComponent<Props, any> {
     state = {};
     render () {
         return(

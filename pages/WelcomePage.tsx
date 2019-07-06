@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text,
@@ -9,7 +9,7 @@ interface Props {
     navigation: any
 }
 
-export default class WelcomePage extends PureComponent<Props, any> {
+export default class WelcomePage extends React.PureComponent<Props, any> {
     private interTime: any;
     private outTime: any;
     state = {

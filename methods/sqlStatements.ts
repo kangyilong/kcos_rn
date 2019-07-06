@@ -35,6 +35,47 @@ export const USER_COLLECTION_LIST = `SELECT
     u.user_id = '@'`;
 
 /*
+* 消费明细
+* */
+export const USER_CONSUMPTION_LIST = `SELECT
+    uu.*,
+    s.shop_pri,
+    s.shop_name,
+    s.shop_pic,
+    s.product_id
+    FROM
+    (SELECT
+    u.money_run,
+    u.run_type,
+    u.run_time,
+    o.shop_id,
+    o.p_code,
+    o.shop_val AS shopValue
+    from
+    user_running_water AS u
+    LEFT JOIN
+    orderMsg AS o
+    ON
+    u.run_order_code = o.p_code
+    WHERE
+    u.user_id = '@'
+    ) AS uu
+    LEFT JOIN
+    shopMsg AS s
+    ON
+    uu.shop_id = s.shop_id
+`;
+
+/*
+* 用户地址
+* */
+export let OWNER_ADDRESS_LIST = `
+    SELECT
+    *
+    FROM userAddress
+    WHERE user_id = '@'`;
+
+/*
 * 获取我的全部订单
 * */
 export let OWNERORDER_ALL = `

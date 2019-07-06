@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import * as React from 'react';
 import {
     View,
     Text,
@@ -14,7 +14,7 @@ interface Props {
     }
 }
 
-export default class Login extends Component<Props, any> {
+export default class Login extends React.Component<Props, any> {
     render () {
         return(
             <View style={styles.Page}>

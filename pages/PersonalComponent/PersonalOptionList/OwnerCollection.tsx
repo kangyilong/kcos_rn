@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text,
@@ -9,12 +9,13 @@ import {
 import SingleCollection from './SingleComponent/SingleCollection';
 import NoData from '../../../components/noData/NoData';
 import Loading from '../../../components/loading/Loading';
+import FooComponent from '../../../components/fooComponent/FooComponent';
 import { replaceStr, getUserId } from '../../../methods/util';
 import { USER_COLLECTION_LIST } from '../../../methods/sqlStatements';
 import appStyles from '../../styles/appStyles';
 import Fetch from "../../../methods/Fetch";
 
-export default class OwnerCollection extends PureComponent {
+export default class OwnerCollection extends React.PureComponent {
     state = {
         isLoading: false,
         tigText: '暂无商品收藏',
@@ -31,21 +32,7 @@ export default class OwnerCollection extends PureComponent {
             })
         });
     }
-    fooComponent = () => {
-        if (this.state.isLoading) {
-            return (
-                <View style={appStyles.indicatorView}>
-                    <ActivityIndicator
-                        style={appStyles.indicator}
-                        animating={true}
-                    />
-                    <Text style={appStyles.indicatorText}>loading...</Text>
-                </View>
-            )
-        } else {
-            return null;
-        }
-    };
+
     render() {
         const {collectionData, isLoading, tigText, isLoadOk} = this.state;
         if(!isLoadOk) {
@@ -57,7 +44,7 @@ export default class OwnerCollection extends PureComponent {
                     data={collectionData}
                     renderItem={({item, index}) => <SingleCollection singleCollectionData={item} key={index}/>}
                     refreshing={isLoading}
-                    ListFooterComponent={this.fooComponent}
+                    ListFooterComponent={() => <FooComponent isLoading={isLoading} />}
                     onEndReachedThreshold={0.5}
                     ListEmptyComponent={() => <NoData tigText={tigText}/>}
                     numColumns={2}

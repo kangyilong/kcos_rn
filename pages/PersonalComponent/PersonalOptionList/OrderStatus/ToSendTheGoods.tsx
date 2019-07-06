@@ -1,7 +1,7 @@
 /*
 * 待发货
 * */
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text
@@ -9,10 +9,7 @@ import {
 import OrderStatusComponent from './OrderStatusComponent/Index';
 import {OWNERORDER_DFH} from '../../../../methods/sqlStatements';
 
-export default class ToSendTheGoods extends PureComponent {
-    componentDidMount() {
-
-    }
+export default class ToSendTheGoods extends React.PureComponent {
     render() {
         return (
             <OrderStatusComponent QUERY_SQL={OWNERORDER_DFH} tigText={'暂无待发货订单'}/>

@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 
 import {
     View,
@@ -8,7 +8,6 @@ import {
     TouchableOpacity
 } from 'react-native';
 import appStyles from '../styles/appStyles';
-import Fetch from '../../methods/Fetch';
 import ImagePicker from 'react-native-image-picker';
 
 const photoOptions = {
@@ -29,7 +28,7 @@ interface Props {
     tintColor: string
 }
 
-export default class PersonalHeader extends PureComponent<Props, any> {
+export default class PersonalHeader extends React.PureComponent<Props, any> {
     state = {
         url: ''
     };

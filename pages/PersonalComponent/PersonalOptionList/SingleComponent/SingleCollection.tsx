@@ -1,4 +1,5 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import * as React from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import {
     View,
     Text,
@@ -38,7 +39,10 @@ export default function SingleCollection(props: Props) {
                     />
                 </View>
                 <View style={styles.foo_box}>
-                    <Text numberOfLines = {1} style={{...appStyles.f16, ...appStyles.textColor, marginBottom: 6}}>{shop_name}</Text>
+                    <Text
+                        numberOfLines={1}
+                        style={{...appStyles.f16, ...appStyles.textColor, marginBottom: 6}}
+                    >{shop_name}</Text>
                     <Text style={{...appStyles.f20, ...appStyles.price}}>{shop_pri} 元</Text>
                 </View>
             </View>

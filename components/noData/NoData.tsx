@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import {
     View,
@@ -7,6 +7,8 @@ import {
     Dimensions,
     StyleSheet
 } from 'react-native';
+
+import { NO_DATA_ICON } from '../../methods/requireImage';
 
 const {width} = Dimensions.get('window');
 
@@ -17,7 +19,7 @@ export default function NoData(props) {
             <View>
                 <Image
                     style={styled.no_img}
-                    source={require('../../assets/images/noData.png')}
+                    source={NO_DATA_ICON}
                 />
             </View>
             <View><Text style={styled.noDataText}>{tigText}</Text></View>

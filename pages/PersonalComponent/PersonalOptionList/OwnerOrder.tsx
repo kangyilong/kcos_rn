@@ -1,11 +1,11 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View
 } from 'react-native';
 import OrderStatusComponent from './OrderStatus/OrderStatusComponent/Index';
 import {OWNERORDER_ALL} from '../../../methods/sqlStatements';
 
-class OwnerOrder extends PureComponent {
+class OwnerOrder extends React.PureComponent {
     render() {
         return (
             <OrderStatusComponent QUERY_SQL={OWNERORDER_ALL} tigText={'暂无订单'}/>

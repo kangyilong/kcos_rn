@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import * as React from 'react';
 import {
     View,
     Text,
@@ -25,7 +25,7 @@ interface Props {
         addListener: Function
     }
 }
-export default class HomePage extends Component<Props, any> {
+export default class HomePage extends React.Component<Props, any> {
     private _navListener: any;
     state = {
         swiperData: []

@@ -1,7 +1,6 @@
 import deviceinfo from 'react-native-device-info';
 export default async function Fetch(params) {
     const local = await deviceinfo.getIPAddress();
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@', local);
     return fetch(`http://${local}:3666/wantMsg`, {
         method: 'POST',
         headers: {

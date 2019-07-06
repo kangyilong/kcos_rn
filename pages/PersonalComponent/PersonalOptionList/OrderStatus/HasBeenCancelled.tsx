@@ -1,7 +1,7 @@
 /*
 * 已取消
 * */
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text
@@ -9,10 +9,7 @@ import {
 import OrderStatusComponent from './OrderStatusComponent/Index';
 import {OWNERORDER_YQX} from '../../../../methods/sqlStatements';
 
-export default class HasBeenCancelled extends PureComponent {
-    componentDidMount() {
-
-    }
+export default class HasBeenCancelled extends React.PureComponent {
     render() {
         return (
             <OrderStatusComponent QUERY_SQL={OWNERORDER_YQX} tigText={'暂无已取消订单'}/>

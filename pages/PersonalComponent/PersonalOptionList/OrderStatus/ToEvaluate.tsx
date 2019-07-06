@@ -1,7 +1,7 @@
 /*
 * 待评价
 * */
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
     View,
     Text
@@ -9,10 +9,7 @@ import {
 import OrderStatusComponent from './OrderStatusComponent/Index';
 import {OWNERORDER_DPJ} from '../../../../methods/sqlStatements';
 
-export default class ToEvaluate extends PureComponent {
-    componentDidMount() {
-
-    }
+export default class ToEvaluate extends React.PureComponent {
     render() {
         return (
             <OrderStatusComponent QUERY_SQL={OWNERORDER_DPJ} tigText={'暂无待评价订单'}/>

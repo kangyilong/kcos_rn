@@ -68,3 +68,44 @@ export function mergeAttribute(data) {
     });
     return arr;
 }
+
+// 将消费明细中的相同p_code的商品合并为一数组
+export function mergeConsumotion(data) {
+    if(Array.isArray(data)) {
+        let arr = [];
+        let obj = {};
+        let index = 0;
+        data.forEach((item) => {
+            if(obj[item.p_code]) {
+                obj[item.p_code].shopList.push({
+                    shop_id: item.shop_id,
+                    product_id: item.product_id,
+                    shop_name: item.shop_name,
+                    shop_pri: item.shop_pri,
+                    shop_pic: item.shop_pic,
+                    shopValue: item.shopValue
+                });
+            }else {
+                obj[item.p_code] = {
+                    p_code: item.p_code,
+                    money_run: item.money_run,
+                    run_type: item.run_type,
+                    run_time: item.run_time,
+                    shopList: [{
+                        shop_id: item.shop_id,
+                        product_id: item.product_id,
+                        shop_name: item.shop_name,
+                        shop_pri: item.shop_pri,
+                        shop_pic: item.shop_pic,
+                        shopValue: item.shopValue
+                    }]
+                };
+                arr[index] = obj[item.p_code];
+                index ++;
+            }
+        });
+        return arr;
+    }else {
+        return null;
+    }
+}

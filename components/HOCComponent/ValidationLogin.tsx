@@ -1,11 +1,11 @@
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {isLogin} from '../../methods/util';
 
 interface Props {
     navigation: any
 }
 export default function VislidationLogin(Wc) {
-    return class extends PureComponent<Props, any>{
+    return class extends React.PureComponent<Props, any>{
         private _navListener: any;
         state = {
             isLogin: false

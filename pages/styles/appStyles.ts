@@ -62,5 +62,8 @@ export default {
     indicatorText: {
         color: 'green',
         fontSize: 15
+    },
+    hrefColor: {
+        color: '#1890ff'
     }
 }

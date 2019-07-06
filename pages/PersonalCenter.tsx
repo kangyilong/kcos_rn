@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import * as React from 'react';
 import { withNavigationFocus } from 'react-navigation';
 import VislidationLogin from '../components/HOCComponent/ValidationLogin';
 import {
@@ -42,7 +42,7 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-class PersonalCenter extends Component<Props, any> {
+class PersonalCenter extends React.Component<Props, any> {
     async componentDidMount() {
         const userId = await getUserId();
         this.props.actionUserIdFn(userId);

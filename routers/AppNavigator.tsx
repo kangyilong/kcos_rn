@@ -1,11 +1,13 @@
+import * as React from 'react';
 import {
-    Button,
-    Image
+    Button
 } from 'react-native';
 import StorePage from '../pages/StorePage';
 import Login from '../pages/Login';
 import WelcomePage from '../pages/WelcomePage';
 import OwnerCollection from '../pages/PersonalComponent/PersonalOptionList/OwnerCollection';
+import OwnerConsumption from '../pages/PersonalComponent/PersonalOptionList/OwnerConsumption';
+import OwnerAddress from '../pages/PersonalComponent/PersonalOptionList/OwnerAddress';
 import {
     createStackNavigator,
     createBottomTabNavigator,
@@ -32,8 +34,8 @@ const AppNavigator = createStackNavigator({
     StorePage: { // 商品详情页
         screen: StorePage,
         navigationOptions: ({navigation}) => {
-            const { state } = navigation;
-            const { params } = state;
+            const {state} = navigation;
+            const {params} = state;
             return {
                 title: params.name ? params.name : 'StorePage'
             }
@@ -42,6 +44,13 @@ const AppNavigator = createStackNavigator({
     OwnerCollection: { // 用户收藏页
         screen: OwnerCollection,
         navigationOptions: () => ({title: '商品收藏'})
+    },
+    OwnerConsumption: {
+        screen: OwnerConsumption,
+        navigationOptions: () => ({title: '消费明细'})
+    },
+    OwnerAddress: {
+        screen: OwnerAddress
     }
 });
 
