@@ -76,6 +76,16 @@ export let OWNER_ADDRESS_LIST = `
     WHERE user_id = '@'`;
 
 /*
+* 设置为默认地址
+* */
+export let SET_ADDRESS_DEFAULTE = `UPDATE userAddress SET is_default = $ WHERE address_id = '@'`;
+
+/*
+* 将默认地址去掉
+* */
+export let DEL_ADDRESS_DEFAULTE = `UPDATE userAddress SET is_default = 0 WHERE user_id = '@' AND is_default = 1 AND address_id != '%'`;
+
+/*
 * 获取我的全部订单
 * */
 export let OWNERORDER_ALL = `

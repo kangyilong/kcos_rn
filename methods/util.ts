@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import CITY from '../assets/city';
 
 export async function isLogin() {
     return await getUserId();
@@ -17,9 +18,9 @@ export async function delUserId() {
 }
 
 // 将sql语句中@占位符替换成userId
-export function replaceStr(str, userId) {
+export function replaceStr(str, userId, symbol = '@') {
     if(typeof str === 'string') {
-        let list = str.split('@');
+        let list = str.split(symbol);
         list[0] = list[0] + userId;
         return list.join('');
     }
@@ -102,6 +103,32 @@ export function mergeConsumotion(data) {
                 };
                 arr[index] = obj[item.p_code];
                 index ++;
+            }
+        });
+        return arr;
+    }else {
+        return null;
+    }
+}
+
+// 将城市数据处理
+export function cityDataFn() {
+    if(Array.isArray(CITY)) {
+        let arr  = [];
+        CITY.forEach(item => {
+            if(item.sub) {
+                let obj = {};
+                obj[item.name] = item.sub;
+                item.sub.forEach((cItem, index) => {
+                    if(cItem.sub) {
+                        let xArr = [];
+                        cItem.sub.forEach(xItem => {
+                            xArr.push(xItem.name);
+                        });
+                        obj[item.name][index] = {[cItem.name]: xArr};
+                    }
+                });
+                arr.push(obj);
             }
         });
         return arr;
