@@ -86,6 +86,48 @@ export let SET_ADDRESS_DEFAULTE = `UPDATE userAddress SET is_default = $ WHERE a
 export let DEL_ADDRESS_DEFAULTE = `UPDATE userAddress SET is_default = 0 WHERE user_id = '@' AND is_default = 1 AND address_id != '%'`;
 
 /*
+* 根据address_id取该条数据
+* */
+export let GET_SINGLE_ADDRESS = `SELECT * FROM userAddress WHERE address_id = '@'`;
+
+/*
+* 修改地址信息
+* */
+export let EDIT_ADDRESS_DATA = `
+    UPDATE
+    userAddress
+    SET
+    user_province = ?,
+    user_city = ?,
+    user_area = ?,
+    user_mobile = ?,
+    user_name = ?,
+    user_county = ?,
+    is_default = ?
+    WHERE
+    address_id = ?
+    AND
+    user_id = ?
+`;
+
+/*
+* 添加地址信息
+* */
+export let ADD_ADDRESS_DATA = `
+    INSERT
+    INTO
+    userAddress
+    (address_id, user_id, user_name, user_mobile, user_province, user_city, user_county, user_area, is_default)
+    VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
+
+/*
+* 删除用户某条信息
+* */
+export let DELETE_ADDRESS = `DELETE FROM userAddress WHERE address_id = ?`;
+
+/*
 * 获取我的全部订单
 * */
 export let OWNERORDER_ALL = `

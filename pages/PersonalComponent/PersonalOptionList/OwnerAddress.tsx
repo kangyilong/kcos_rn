@@ -7,7 +7,10 @@ import {
     FlatList,
     Modal,
     StyleSheet,
-    Keyboard
+    Keyboard,
+    Dimensions,
+    Platform,
+    TouchableOpacity
 } from 'react-native';
 import Picker from 'react-native-picker';
 import FooComponent from '../../../components/fooComponent/FooComponent';
@@ -16,12 +19,20 @@ import SingleAddress from './SingleComponent/SingleAddress';
 import ToastMsg from '../../../components/toastMsg/ToastMsg';
 import appStyles from "../../styles/appStyles";
 import {getUserId, replaceStr} from "../../../methods/util";
-import {OWNER_ADDRESS_LIST} from "../../../methods/sqlStatements";
+import {
+    OWNER_ADDRESS_LIST,
+    GET_SINGLE_ADDRESS,
+    EDIT_ADDRESS_DATA,
+    ADD_ADDRESS_DATA,
+    DELETE_ADDRESS
+} from "../../../methods/sqlStatements";
 import Fetch from "../../../methods/Fetch";
 import Loading from "../../../components/loading/Loading";
-import { cityDataFn } from '../../../methods/util';
+import ToastLoading from "../../../components/toastLoading/ToastLoading";
+import {cityDataFn} from '../../../methods/util';
 
 let _this = null;
+const {width} = Dimensions.get('window');
 
 interface Props {
     navigation: any
@@ -53,21 +64,24 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
         isShow: false,
         modalVisible: false,
         isShowMengCeng: false,
-        toastMsg: '操作成功',
+        isShowToastLoading: false,
+        toastMsg: '',
         tigText: '还未添加地址哦',
         language: '',
         params: {
-            name: '',
-            mobile: '',
-            province: '',
-            city: '',
-            county: '',
-            area: '',
+            user_name: '',
+            user_mobile: '',
+            user_province: '',
+            user_city: '',
+            user_county: '',
+            user_area: '',
             address_id: '',
+            user_id: '',
             is_default: 0
         },
         companyAreaArray: [],
-        userCity: ''
+        userCity: '',
+        userId: ''
     };
 
     setOwnerAddress = (type) => {
@@ -80,12 +94,6 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
                     showOrHide: true
                 });
                 break;
-            case 'save':
-                setParams({btnTitle: '保存', mode: 'set'});
-                this.setState({
-                    showOrHide: false
-                });
-                break;
             case 'set':
                 setParams({btnTitle: '设置', mode: 'cancel'});
                 this.setState({
@@ -96,13 +104,36 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
     };
 
     getAddressData = () => {
-        getUserId().then(userId => {
-            let str = replaceStr(OWNER_ADDRESS_LIST, userId);
-            Fetch({statements: str}).then(data => {
-                this.setState({
-                    addressData: data,
-                    isLoadOk: true
-                });
+        let str = replaceStr(OWNER_ADDRESS_LIST, this.state.userId);
+        Fetch({statements: str}).then(data => {
+            this.setState({
+                addressData: data,
+                isLoadOk: true
+            });
+        });
+    };
+
+    exitAddress = (address_id) => {
+        let sql = replaceStr(GET_SINGLE_ADDRESS, address_id);
+        Fetch({statements: sql}).then(data => {
+            let userCity = `${data[0].user_province}-${data[0].user_city}-${data[0].user_county}`;
+            this.setState({
+                modalVisible: true,
+                params: data[0],
+                userCity
+            });
+        });
+    };
+
+    deleteAddress = (address_id) => {
+        console.log(address_id);
+        this.setState({
+            isShowToastLoading: true
+        });
+        Fetch({statements: DELETE_ADDRESS, parameter: JSON.stringify([address_id])}).then(() => {
+            this.getAddressData();
+            this.setState({
+                isShowToastLoading: false
             });
         });
     };
@@ -111,9 +142,10 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
         this.getAddressData();
     };
 
-    isShowToast = () => {
+    isShowToast = (toastMsg = '操作成功') => {
         this.setState({
-            isShow: true
+            isShow: true,
+            toastMsg
         }, () => {
             setTimeout(() => {
                 this.setState({
@@ -146,8 +178,6 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
                     companyAreaArray: data,
                     userCity: data.join('-'),
                     isShowMengCeng: false,
-                }, () => {
-                    console.log('userCity', this.state.userCity);
                 })
             },
             onPickerCancel: () => {
@@ -157,9 +187,77 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
         Picker.show();
     };
 
+    saveAddressMsg = () => {
+        let {userCity, params} = this.state;
+        if (!params.user_name || !params.user_mobile) {
+            this.isShowToast('请输入完整');
+            return false;
+        }
+        if (params.address_id) {
+            if (userCity) {
+                let list = userCity.split('-');
+                params = {
+                    ...params,
+                    user_id: this.state.userId,
+                    user_province: list[0],
+                    user_city: list[1],
+                    user_county: list[2]
+                };
+                const {user_province, user_city, user_area, user_mobile, user_name, user_county, is_default, address_id, user_id} = params;
+                Fetch({
+                    statements: EDIT_ADDRESS_DATA,
+                    parameter: JSON.stringify([user_province, user_city, user_area, user_mobile, user_name, user_county, is_default, address_id, user_id])
+                }).then(() => {
+                    this.getAddressData();
+                    this.isShowToast();
+                    this.setOwnerAddress('set');
+                    setTimeout(() => {
+                        this.setState({
+                            modalVisible: false
+                        });
+                    }, 100);
+                });
+            }
+        } else {
+            if (!userCity) {
+                this.isShowToast('请选择省市区/县');
+                return false;
+            }
+            let list = userCity.split('-');
+            params = {
+                ...params,
+                address_id: `kcos1314_Ar${new Date().getTime()}${Math.floor(Math.random() * 1000)}`,
+                user_id: this.state.userId,
+                user_province: list[0],
+                user_city: list[1],
+                user_county: list[2]
+            };
+            const {user_province, user_city, user_area, user_mobile, user_name, user_county, is_default, address_id, user_id} = params;
+            Fetch({
+                statements: ADD_ADDRESS_DATA,
+                parameter: JSON.stringify([address_id, user_id, user_name, user_mobile, user_province, user_city, user_county, user_area, is_default])
+            }).then(() => {
+                this.getAddressData();
+                this.isShowToast();
+                this.setOwnerAddress('set');
+                setTimeout(() => {
+                    this.setState({
+                        modalVisible: false
+                    });
+                }, 100);
+            });
+        }
+    };
+
     componentDidMount() {
         _this = this;
-        this.getAddressData();
+        getUserId().then(userId => {
+            this.setState({
+                userId
+            }, () => {
+                this.getAddressData();
+            })
+        });
     }
 
     render() {
@@ -172,11 +270,13 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
             isShow,
             toastMsg,
             modalVisible,
-            params
+            params,
+            userCity,
+            isShowToastLoading
         } = this.state;
         if (!isLoadOk) return <Loading/>;
         return (
-            <View style={appStyles.flex}>
+            <View style={{...appStyles.flex}}>
                 <FlatList
                     data={addressData}
                     renderItem={({item, index}) =>
@@ -184,9 +284,10 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
                             singleData={item}
                             showOrHide={showOrHide}
                             key={index}
-                            setOwnerAddress={this.setOwnerAddress}
                             resetAddressData={this.resetAddressData}
                             isShowToast={this.isShowToast}
+                            exitAddress={this.exitAddress}
+                            deleteAddress={this.deleteAddress}
                         />}
                     refreshing={isLoading}
                     ListFooterComponent={() => <FooComponent isLoading={isLoading}/>}
@@ -203,40 +304,61 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
                     <View style={styles.modal_box}>
                         <View style={styles.modal_con}>
                             <View style={styles.input_box}>
-                                <Text>姓名：</Text>
+                                <Text style={styles.input_box_l}>姓名：</Text>
                                 <TextInput
-                                    value={params.name}
-                                    onChangeText={(value) => {this.setState({
-                                        params: {
-                                            ...params,
-                                            name: value
-                                        }
-                                    })}}
+                                    style={styles.input_box_r}
+                                    value={params.user_name}
+                                    onChangeText={(value) => {
+                                        this.setState({
+                                            params: {
+                                                ...params,
+                                                user_name: value
+                                            }
+                                        })
+                                    }}
                                 />
                             </View>
                             <View style={styles.input_box}>
-                                <Text>电话：</Text>
+                                <Text style={styles.input_box_l}>电话：</Text>
                                 <TextInput
-                                    value={params.mobile}
-                                    onChangeText={(value) => {this.setState({
-                                        params: {
-                                            ...params,
-                                            mobile: value
-                                        }
-                                    })}}
+                                    style={styles.input_box_r}
+                                    value={params.user_mobile}
+                                    onChangeText={(value) => {
+                                        this.setState({
+                                            params: {
+                                                ...params,
+                                                user_mobile: value
+                                            }
+                                        })
+                                    }}
                                 />
                             </View>
                             <View style={styles.input_box}>
-                                <Text onPress={this._companyAreaClickAction}>详细地址：</Text>
+                                <Text style={styles.input_box_l}>省市区/县：</Text>
+                                <View style={styles.input_box_r}>
+                                    <Text onPress={this._companyAreaClickAction} numberOfLines={1}>{userCity}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.input_box}>
+                                <Text style={styles.input_box_l}>详细地址：</Text>
                                 <TextInput
-                                    value={params.area}
-                                    onChangeText={(value) => {this.setState({
-                                        params: {
-                                            ...params,
-                                            area: value
-                                        }
-                                    })}}
+                                    style={styles.input_box_r}
+                                    value={params.user_area}
+                                    onChangeText={(value) => {
+                                        this.setState({
+                                            params: {
+                                                ...params,
+                                                user_area: value
+                                            }
+                                        })
+                                    }}
                                 />
+                            </View>
+                            <View style={styles.con_btn}>
+                                <Text
+                                    style={styles.btn}
+                                    onPress={this.saveAddressMsg}
+                                >确 定</Text>
                             </View>
                         </View>
                         <View style={styles.modal_foo}>
@@ -244,24 +366,92 @@ export default class OwnerAddress extends React.PureComponent<Props, any> {
                                 style={{fontSize: 36, color: '#444', textAlign: 'right'}}
                                 onPress={() => {
                                     this.setState({
-                                        modalVisible: false
+                                        modalVisible: false,
+                                        isShowMengCeng: false
                                     })
                                 }}
                             >×</Text>
                         </View>
                     </View>
                 </Modal>
+                <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => {
+                        this.setState({
+                            modalVisible: true
+                        })
+                    }}
+                >
+                    <View style={styles.foo_add}>
+                        <Text style={styles.foo_add_tit}>+</Text>
+                    </View>
+                </TouchableOpacity>
+                <ToastLoading isShow={isShowToastLoading} />
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    modal_box: {},
-    modal_con: {},
-    input_box: {},
+    modal_box: {
+        marginTop: 50
+    },
+    modal_con: {
+        paddingLeft: 10,
+        paddingRight: 10
+    },
+    input_box: {
+        flexDirection: 'row',
+        height: 68,
+        alignItems: 'center'
+    },
+    input_box_l: {
+        width: 100,
+        textAlign: 'right'
+    },
+    input_box_r: {
+        width: width - 120,
+        borderStyle: 'solid',
+        borderBottomWidth: 0.5,
+        borderColor: '#eee',
+        paddingBottom: 5
+    },
+    con_btn: {
+        marginTop: 15
+    },
+    btn: {
+        backgroundColor: 'rgb(33, 182, 255)',
+        color: '#fff',
+        fontSize: 17,
+        paddingTop: 10,
+        paddingBottom: 10,
+        textAlign: 'center',
+        borderRadius: 18
+    },
     modal_foo: {
         marginTop: 30,
         marginRight: 10
+    },
+    foo_add: {
+        position: 'absolute',
+        bottom: 50,
+        left: width / 2 - 30,
+        width: 60,
+        height: 60,
+        borderRadius: 60,
+        justifyContent:'center',
+        alignItems: 'center',
+        textAlignVertical:'center',
+        borderStyle: 'solid',
+        borderWidth: 0.5,
+        borderColor: '#ddd',
+        ...Platform.select({
+            ios: { lineHeight: 60},
+            android: {}
+        })
+    },
+    foo_add_tit: {
+        fontSize: 30,
+        color: '#222'
     }
 });

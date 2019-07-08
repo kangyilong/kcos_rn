@@ -15,9 +15,10 @@ import {getUserId, replaceStr} from "../../../../methods/util";
 
 interface Props {
     singleData: any,
-    setOwnerAddress: Function,
     resetAddressData: Function,
     isShowToast: Function,
+    exitAddress: Function,
+    deleteAddress: Function,
     showOrHide: boolean
 }
 
@@ -41,42 +42,47 @@ export default function SingleAddress(props: Props) {
             }
         });
     }, [props.singleData]);
-    const {user_name, user_province, user_city, user_county, user_area, user_mobile, is_default} = props.singleData;
+    const {user_name, user_province, user_city, user_county, user_area, user_mobile, is_default, address_id} = props.singleData;
     return (
-        <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => {props.setOwnerAddress(112312)}}
-        >
-            <View style={styles.single_address}>
-                <View style={styles.address_con}>
-                    <View>
-                        <TouchableOpacity
-                            activeOpacity={0.9}
-                            onPress={selectDefault}
-                        >
-                            <Image
-                                style={props.showOrHide ? styles.left_image : {}}
-                                source={props.showOrHide ? is_default ? SELECT_ICON : UN_SELECT_ICON : null}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <Text style={{...appStyles.f18, marginBottom: 5}}>{user_name}-{user_mobile}</Text>
-                        <Text numberOfLines={1} style={appStyles.f14}>{user_province}{user_city}{user_county}{user_area}</Text>
-                    </View>
+        <View style={styles.single_address}>
+            <View style={styles.address_con}>
+                <View>
+                    <TouchableOpacity
+                        activeOpacity={0.9}
+                        onPress={selectDefault}
+                    >
+                        <Image
+                            style={props.showOrHide ? styles.left_image : {}}
+                            source={props.showOrHide ? is_default ? SELECT_ICON : UN_SELECT_ICON : null}
+                        />
+                    </TouchableOpacity>
                 </View>
-                <View style={{...styles.address_right, display: props.showOrHide ? 'flex' : 'none'}}>
+                <View>
+                    <Text style={{...appStyles.f18, marginBottom: 5}}>{user_name}-{user_mobile}</Text>
+                    <Text numberOfLines={1} style={appStyles.f14}>{user_province}{user_city}{user_county}{user_area}</Text>
+                </View>
+            </View>
+            <View style={{...styles.address_right, display: props.showOrHide ? 'flex' : 'none'}}>
+                <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => { props.exitAddress(address_id) }}
+                >
                     <Image
                         style={styles.right_icon}
                         source={EXIT_ICON}
                     />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => { props.deleteAddress(address_id) }}
+                >
                     <Image
                         style={styles.right_icon}
                         source={DELETE_ICON}
                     />
-                </View>
+                </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+        </View>
     )
 }
 
