@@ -1,16 +1,11 @@
 import * as React from 'react';
 import {
     View,
-    Text,
-    Button,
-    Image,
     StyleSheet,
-    Dimensions,
-    FlatList,
-    RefreshControl,
-    ActivityIndicator
+    ScrollView
 } from 'react-native';
 import HeadComponent from './page02Component/HeadComponent';
+import DetailShopComponent from './page02Component/DetailShopComponent';
 import MoreShopComponent from './MoreShopComponent';
 
 interface Props {
@@ -27,25 +22,29 @@ interface Props {
     }
 }
 
-const { width, height } = Dimensions.get('window');
-
 export default class StorePage extends React.PureComponent<Props, any> {
-    state = {};
     render () {
+        const {state} = this.props.navigation;
+        const {productId, shopId} = state.params;
         return(
-            <View style={styles.container}>
-                <HeadComponent
-                    navigation={this.props.navigation}
-                />
-                <MoreShopComponent />
-            </View>
+            <ScrollView
+                showsVerticalScrollIndicator={true}
+            >
+                <View style={styles.container}>
+                    <HeadComponent
+                        navigation={this.props.navigation}
+                    />
+                    <MoreShopComponent shopMsg={{productId, shopId}}/>
+                    {/*<DetailShopComponent product_id={productId}/>*/}
+                </View>
+            </ScrollView>
         )
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        marginBottom: 50
     }
 });

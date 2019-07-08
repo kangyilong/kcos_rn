@@ -17,6 +17,28 @@ export const HOMEPAGE_SHOP_LIST = `SELECT
     shopMsg`;
 
 /*
+* 获取其他商品
+* */
+export const OTHER_SHOP_LIST = `
+    SELECT
+    product_id,
+    shop_id,
+    shop_pic,
+    shop_pri,
+    shop_name,
+    shop_txt
+    FROM
+    shopMsg
+    WHERE
+    product_id != ?
+`;
+
+/*
+* 获取商品详情介绍
+* */
+export const GET_SHOP_DETMSG = `SELECT product_det FROM productMsg WHERE product_id = ?`;
+
+/*
 * 用户收藏
 * */
 export const USER_COLLECTION_LIST = `SELECT

@@ -15,7 +15,7 @@ import {
 
 import FETCH from '../../methods/Fetch';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 interface Props {
     navigation: {
@@ -31,15 +31,15 @@ interface Props {
     }
 }
 
-export default function(props: Props) {
+export default function (props: Props) {
     const [headerImageData, setHeaderImageData] = useState([]);
     const [imgSize, setImgSize] = useState(0);
     const [sIndex, setIndex] = useState(0);
     const getShopDetail = useCallback(() => {
-        const { navigation } = props;
-        const { state } = navigation;
-        const { params } = state;
-        if(!params) {
+        const {navigation} = props;
+        const {state} = navigation;
+        const {params} = state;
+        if (!params) {
             setTimeout(() => {
                 navigation.goBack();
             }, 1000);
@@ -50,7 +50,7 @@ export default function(props: Props) {
         }).then(data => {
             setHeaderImageData(data);
             data.forEach((item, index) => {
-                if(item.shop_id === params.shopId) {
+                if (item.shop_id === params.shopId) {
                     setIndex(index);
                 }
             });
@@ -60,10 +60,10 @@ export default function(props: Props) {
                 console.log(err);
             });
         })
-    }, []);
+    }, [props.navigation]);
     useEffect(() => {
         getShopDetail();
-    }, []);
+    }, [props.navigation]);
     return (
         <>
             {
@@ -85,7 +85,10 @@ export default function(props: Props) {
                                             setIndex(index)
                                         }}
                                     >
-                                        <View style={{...styles.fooSingle, borderColor: sIndex === index ? '#abcdef' : '#ccc'}}>
+                                        <View style={{
+                                            ...styles.fooSingle,
+                                            borderColor: sIndex === index ? '#abcdef' : '#ccc'
+                                        }}>
                                             <Image
                                                 style={{...styles.fImage, height: (width / 5 - 10) * imgSize}}
                                                 source={{uri: imageItem.shop_pic}}
@@ -100,6 +103,10 @@ export default function(props: Props) {
                                 <Text style={styles.productName}>{headerImageData[sIndex].shop_name}：</Text>
                                 <Text style={styles.productPri}>{headerImageData[sIndex].shop_pri} 元</Text>
                             </View>
+                            <View style={styles.op_btns}>
+                                <Text style={{...styles.shop_btn, ...styles.add_cart}}>加入购物车</Text>
+                                <Text style={{...styles.shop_btn, ...styles.add_coll}}>加入收藏</Text>
+                            </View>
                             <Text style={styles.productTxt}>{headerImageData[sIndex].shop_txt}</Text>
                         </View>
                     </View>
@@ -112,7 +119,7 @@ export default function(props: Props) {
 const styles = StyleSheet.create({
     shopDetailHeader: {
         width: width,
-        paddingBottom: 20
+        paddingBottom: 30
     },
     headerImage: {
         width: width,
@@ -156,5 +163,32 @@ const styles = StyleSheet.create({
     productPri: {
         fontSize: 18,
         color: 'red'
+    },
+    op_btns: {
+        marginTop: 10,
+        marginBottom: 20,
+        flexDirection: 'row'
+    },
+    add_cart: {
+        borderWidth: 0.5,
+        borderStyle: 'solid',
+        borderColor: '#1890ff',
+        marginRight: 20,
+        color: '#1890ff'
+    },
+    add_coll: {
+        borderColor: '#ddd',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        color: '#333'
+    },
+    shop_btn: {
+        borderRadius: 10,
+        height: 40,
+        width: 120,
+        textAlign: 'center',
+        alignItems: 'center',
+        lineHeight: 40,
+        fontSize: 17
     }
 });

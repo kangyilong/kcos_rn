@@ -111,6 +111,22 @@ export function mergeConsumotion(data) {
     }
 }
 
+// 取相同品牌商品中的第一个
+export function getProductFirst(data) {
+    if(Array.isArray(data)) {
+        let obj = {};
+        let arr = [];
+        data.forEach(item => {
+            if(!obj[item.product_id]) {
+                obj[item.product_id] = '1';
+                arr.push(item);
+            }
+        });
+        return arr;
+    }
+    return null;
+}
+
 // 将城市数据处理
 export function cityDataFn() {
     if(Array.isArray(CITY)) {
