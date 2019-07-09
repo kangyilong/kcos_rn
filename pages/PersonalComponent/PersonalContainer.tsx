@@ -16,15 +16,18 @@ const singleList = [
         title: '我的订单'
     },{
         id: '1',
-        title: '我的收藏'
+        title: '我的购物车'
     },{
         id: '2',
-        title: '消费明细'
+        title: '我的收藏'
     },{
         id: '3',
-        title: '收货地址'
+        title: '消费明细'
     },{
         id: '4',
+        title: '收货地址'
+    },{
+        id: '5',
         title: '修改个人信息'
     }
 ];
@@ -36,15 +39,18 @@ export default class PersonalContainer extends React.PureComponent {
                 NavigatorUtil.goPage('OwnerOrder');
                 break;
             case '1':
-                NavigatorUtil.goPage('OwnerCollection');
+                NavigatorUtil.goPage('UserShopCart');
                 break;
             case '2':
-                NavigatorUtil.goPage('OwnerConsumption');
+                NavigatorUtil.goPage('OwnerCollection');
                 break;
             case '3':
-                NavigatorUtil.goPage('OwnerAddress');
+                NavigatorUtil.goPage('OwnerConsumption');
                 break;
             case '4':
+                NavigatorUtil.goPage('OwnerAddress');
+                break;
+            case '5':
                 break;
         }
     };

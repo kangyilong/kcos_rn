@@ -14,7 +14,40 @@ export const HOMEPAGE_SHOP_LIST = `SELECT
     shop_name,
     shop_txt
     FROM
-    shopMsg`;
+    shopMsg
+`;
+
+/*
+* 筛选首页商品
+* */
+export const SCREENING_HOMEPAGE_SHOP = `
+    SELECT
+    s.product_id,
+    s.shop_id,
+    s.shop_pic,
+    s.shop_pri,
+    s.shop_name,
+    s.shop_txt
+    FROM
+    shopMsg AS s
+    LEFT JOIN
+    productmsg AS p
+    ON
+    s.product_id = p.product_id
+    WHERE
+    p.@ = ?
+`;
+
+/*
+* 加入收藏
+* */
+export const ADD_COLLECTION = `
+    INSERT INTO
+    userCollection
+    (user_id, product_id, shop_id, code)
+    VALUES
+    (?, ?, ?, ?)
+`;
 
 /*
 * 获取其他商品
@@ -37,6 +70,17 @@ export const OTHER_SHOP_LIST = `
 * 获取商品详情介绍
 * */
 export const GET_SHOP_DETMSG = `SELECT product_det FROM productMsg WHERE product_id = ?`;
+
+/*
+* 加入到购物车
+* */
+export const ADD_SHOP_CART = `
+    INSERT INTO
+    userCart
+    (code, user_id, shop_id, product_id, shop_val, shop_pri)
+    VALUES
+    (?, ?, ?, ?, ?, ?)
+`;
 
 /*
 * 用户收藏

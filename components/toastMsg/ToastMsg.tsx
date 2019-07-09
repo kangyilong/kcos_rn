@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     toast_box: {
         display: 'flex',
         position: 'absolute',
-        top: 30,
+        top: 60,
         left: width / 2 - 50,
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         paddingTop: 8,

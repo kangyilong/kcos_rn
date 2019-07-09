@@ -12,10 +12,15 @@ import {
     ActivityIndicator,
     TouchableOpacity
 } from 'react-native';
+import HeadAddShopCart from './headChildren/HeadAddShopCart';
+import ToastLoading from '../../components/toastLoading/ToastLoading';
+import ToastMsg from '../../components/toastMsg/ToastMsg';
+import FETCH, {default as Fetch} from '../../methods/Fetch';
+import NavigatorUtil from "../../methods/NavigatorUtil";
+import {ADD_COLLECTION} from '../../methods/sqlStatements';
+import {getUserId} from "../../methods/util";
 
-import FETCH from '../../methods/Fetch';
-
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 interface Props {
     navigation: {
@@ -35,6 +40,9 @@ export default function (props: Props) {
     const [headerImageData, setHeaderImageData] = useState([]);
     const [imgSize, setImgSize] = useState(0);
     const [sIndex, setIndex] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [toastIsShow, setToastIsShow] = useState(false);
+    const [loadingIsShow, setLoadingIsShow] = useState(false);
     const getShopDetail = useCallback(() => {
         const {navigation} = props;
         const {state} = navigation;
@@ -46,7 +54,7 @@ export default function (props: Props) {
             return;
         }
         FETCH({
-            statements: `SELECT shop_id, shop_pic, shop_pri, shop_Num, shop_txt, shop_name FROM shopMsg WHERE product_id = '${params.productId}'`
+            statements: `SELECT shop_id, shop_pic, shop_pri, shop_Num, product_id, shop_txt, shop_name FROM shopMsg WHERE product_id = '${params.productId}'`
         }).then(data => {
             setHeaderImageData(data);
             data.forEach((item, index) => {
@@ -61,11 +69,50 @@ export default function (props: Props) {
             });
         })
     }, [props.navigation]);
+    const hideModalVisibleFn = useCallback((type = '') => {
+        setModalVisible(false);
+        if(type === 'start') {
+            setLoadingIsShow(true);
+        }
+        if(type === 'end') {
+            setLoadingIsShow(false);
+            setToastIsShow(true);
+            setTimeout(() => {
+                setToastIsShow(false);
+                NavigatorUtil.goPage('UserShopCart');
+            }, 1500);
+        }
+    }, []);
+    const addCollectionFn = useCallback(() => {
+        getUserId().then(user_id => {
+            if(!user_id) {
+                NavigatorUtil.goPage('Login');
+                return;
+            }
+            setLoadingIsShow(true);
+            let code = `kcos_ios${new Date().getTime()}${Math.floor(Math.random() * 1000)}`;
+            const {productId, shopId} = props.navigation.state.params;
+            Fetch({
+                statements: ADD_COLLECTION,
+                parameter: JSON.stringify([user_id, productId, shopId, code])
+            }).then(() => {
+                setLoadingIsShow(false);
+                setToastIsShow(true);
+                setTimeout(() => {
+                    setToastIsShow(false);
+                }, 1500);
+            }, () => {
+                setLoadingIsShow(false);
+            }).catch(() => {
+                setLoadingIsShow(false);
+            });
+        });
+    }, []);
     useEffect(() => {
         getShopDetail();
     }, [props.navigation]);
     return (
-        <>
+        <View>
             {
                 headerImageData.length > 0 ? (
                     <View style={styles.shopDetailHeader}>
@@ -104,15 +151,40 @@ export default function (props: Props) {
                                 <Text style={styles.productPri}>{headerImageData[sIndex].shop_pri} 元</Text>
                             </View>
                             <View style={styles.op_btns}>
-                                <Text style={{...styles.shop_btn, ...styles.add_cart}}>加入购物车</Text>
-                                <Text style={{...styles.shop_btn, ...styles.add_coll}}>加入收藏</Text>
+                                <Text
+                                    style={{...styles.shop_btn, ...styles.add_cart}}
+                                    onPress={() => {setModalVisible(true)}}
+                                >加入购物车</Text>
+                                <Text
+                                    style={{...styles.shop_btn, ...styles.add_coll}}
+                                    onPress={addCollectionFn}
+                                >加入收藏</Text>
                             </View>
                             <Text style={styles.productTxt}>{headerImageData[sIndex].shop_txt}</Text>
                         </View>
                     </View>
                 ) : null
             }
-        </>
+            <View style={styles.cart_icon_box}>
+                <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => {NavigatorUtil.goPage('UserShopCart')}}
+                >
+                    <Image
+                        style={styles.cart_icon}
+                        source={require('../../assets/images/shopCart.jpeg')}
+                    />
+                </TouchableOpacity>
+            </View>
+            <HeadAddShopCart
+                modalVisible = {modalVisible}
+                hideModalVisibleFn = {hideModalVisibleFn}
+                headItem = {headerImageData}
+                sIndex={sIndex}
+            />
+            <ToastLoading isShow={loadingIsShow}/>
+            <ToastMsg toastMsg="操作成功" isShow={toastIsShow}/>
+        </View>
     )
 }
 
@@ -190,5 +262,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         lineHeight: 40,
         fontSize: 17
+    },
+    cart_icon_box: {
+        position: 'absolute',
+        right: 20,
+        top: 10
+    },
+    cart_icon: {
+        width: 30,
+        height: 30
     }
 });

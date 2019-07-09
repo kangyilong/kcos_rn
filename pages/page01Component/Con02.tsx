@@ -12,17 +12,32 @@ import {
 } from 'react-native';
 import ShopSingle from './Single';
 import FETCH from '../../methods/Fetch';
-import { HOMEPAGE_SHOP_LIST } from '../../methods/sqlStatements';
+import { HOMEPAGE_SHOP_LIST, SCREENING_HOMEPAGE_SHOP } from '../../methods/sqlStatements';
+import {replaceStr} from "../../methods/util";
 
 const {width} = Dimensions.get('window');
 
-interface Props {}
+interface Props {
+    isScreening: boolean,
+    conditions: {
+        key: string,
+        value: string
+    }
+}
 
 export default function Con02Component(props: Props) {
     const [shopMsg, setShopMsg] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const getShopMsg = useCallback(() => {
-        FETCH({statements: HOMEPAGE_SHOP_LIST}).then(data => {
+        let sql = '', params = {};
+        if(props.isScreening && props.conditions.value !== '全部') {
+            sql = replaceStr(SCREENING_HOMEPAGE_SHOP, props.conditions.key);
+            params = {statements: sql, parameter: JSON.stringify([props.conditions.value])}
+        }else {
+            sql = HOMEPAGE_SHOP_LIST;
+            params = {statements: sql};
+        }
+        FETCH(params).then(data => {
             let obj = {};
             let arr = [];
             data.forEach((item: any) => {
@@ -38,7 +53,7 @@ export default function Con02Component(props: Props) {
         }, () => {
             setIsLoading(false);
         });
-    }, []);
+    }, [props.conditions]);
     const fooComponent = useCallback(() => (
         <View style={styles.indicatorView}>
             <ActivityIndicator
@@ -64,7 +79,7 @@ export default function Con02Component(props: Props) {
     }, []);
     useEffect(() => {
         getShopMsg();
-    }, []);
+    }, [props.conditions]);
     return (
         <View style={styles.con02}>
             <View style={styles.box}>

@@ -8,6 +8,7 @@ import WelcomePage from '../pages/WelcomePage';
 import OwnerCollection from '../pages/PersonalComponent/PersonalOptionList/OwnerCollection';
 import OwnerConsumption from '../pages/PersonalComponent/PersonalOptionList/OwnerConsumption';
 import OwnerAddress from '../pages/PersonalComponent/PersonalOptionList/OwnerAddress';
+import UserShopCart from '../pages/page02Component/userShopCart/UserShopCart';
 import {
     createStackNavigator,
     createBottomTabNavigator,
@@ -51,6 +52,10 @@ const AppNavigator = createStackNavigator({
     },
     OwnerAddress: {
         screen: OwnerAddress
+    },
+    UserShopCart: {
+        screen: UserShopCart,
+        navigationOptions: () => ({title: '购物车'})
     }
 });
 
