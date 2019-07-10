@@ -109,6 +109,25 @@ export const ADD_SHOP_CART = `
 `;
 
 /*
+* 判断该商品是否在购物车中并获取该在购物车中的数量
+* */
+export const IS_CART_GET_NUM = `SELECT shop_val FROM userCart WHERE user_id = ? AND shop_id = ?`;
+
+/*
+* 修改购物车中存在的商品数量
+* */
+export const EDIT_SHOP_CART = `
+    UPDATE
+    userCart
+    SET
+    shop_val = ?
+    WHERE
+    user_id = ?
+    AND
+    shop_id = ?
+`;
+
+/*
 * 用户收藏
 * */
 export const USER_COLLECTION_LIST = `SELECT

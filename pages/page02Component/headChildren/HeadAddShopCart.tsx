@@ -9,7 +9,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import ModalComponent from '../../../components/HOCComponent/ModalComponent';
-import {ADD_SHOP_CART} from '../../../methods/sqlStatements';
+import {ADD_SHOP_CART, IS_CART_GET_NUM, EDIT_SHOP_CART} from '../../../methods/sqlStatements';
 import appStyles from "../../styles/appStyles";
 import {getUserId} from "../../../methods/util";
 import Fetch from "../../../methods/Fetch";
@@ -47,15 +47,27 @@ function HeadAddShopCart(props: Props) {
             }
             props.hideModalVisibleFn('start');
             const {shop_id, product_id, shop_pri} = props.headItem[sIndex];
-            const shop_val = number, code = `kcos_ios${new Date().getTime()}${Math.floor(Math.random() * 1000)}`;
-            Fetch({
-                statements: ADD_SHOP_CART,
-                parameter: JSON.stringify([code, user_id, shop_id, product_id, shop_val, shop_pri])
-            }).then(() => {
-                props.hideModalVisibleFn('end');
-            })
+            Fetch({statements: IS_CART_GET_NUM, parameter: JSON.stringify([user_id, shop_id])}).then(data => {
+                if(data.length === 0) {
+                    const shop_val = number, code = `kcos_ios${new Date().getTime()}${Math.floor(Math.random() * 1000)}`;
+                    Fetch({
+                        statements: ADD_SHOP_CART,
+                        parameter: JSON.stringify([code, user_id, shop_id, product_id, shop_val, shop_pri])
+                    }).then(() => {
+                        props.hideModalVisibleFn('end');
+                    })
+                }else {
+                    let num = parseInt(data[0].shop_val) + parseInt(number);
+                    Fetch({
+                        statements: EDIT_SHOP_CART,
+                        parameter: JSON.stringify([num, user_id, shop_id])
+                    }).then(() => {
+                        props.hideModalVisibleFn('end');
+                    });
+                }
+            });
         });
-    }, []);
+    }, [sIndex]);
     return (
         <View style={{position: 'relative'}}>
             <View style={styles.add_cart_head}>
