@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import CITY from '../assets/city';
 
 export async function isLogin() {
-    return await getUserId();
+    return !!await getUserId();
 }
 
 export async function getUserId() {
@@ -17,7 +17,7 @@ export async function delUserId() {
     await AsyncStorage.removeItem('userId');
 }
 
-// 将sql语句中@占位符替换成userId
+// 将sql语句中@占位符替换成字段或值
 export function replaceStr(str, userId, symbol = '@') {
     if(typeof str === 'string') {
         let list = str.split(symbol);

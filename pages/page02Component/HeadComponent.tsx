@@ -7,7 +7,6 @@ import {
     Image,
     StyleSheet,
     Dimensions,
-    FlatList,
     RefreshControl,
     ActivityIndicator,
     TouchableOpacity
@@ -17,7 +16,7 @@ import ToastLoading from '../../components/toastLoading/ToastLoading';
 import ToastMsg from '../../components/toastMsg/ToastMsg';
 import FETCH, {default as Fetch} from '../../methods/Fetch';
 import NavigatorUtil from "../../methods/NavigatorUtil";
-import {ADD_COLLECTION} from '../../methods/sqlStatements';
+import {ADD_COLLECTION, IS_SHOP_COLLECTION} from '../../methods/sqlStatements';
 import {getUserId} from "../../methods/util";
 
 const {width} = Dimensions.get('window');
@@ -39,10 +38,31 @@ interface Props {
 export default function (props: Props) {
     const [headerImageData, setHeaderImageData] = useState([]);
     const [imgSize, setImgSize] = useState(0);
+    const [collText, setCollText] = useState('加入收藏');
     const [sIndex, setIndex] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [toastIsShow, setToastIsShow] = useState(false);
     const [loadingIsShow, setLoadingIsShow] = useState(false);
+
+    const lookTheShop = useCallback((imageItem, index) => {
+        getUserId().then(user_id => {
+            if(user_id) {
+                let { shop_id } = imageItem;
+                Fetch({
+                    statements: IS_SHOP_COLLECTION,
+                    parameter: JSON.stringify([shop_id, user_id])
+                }).then(data => {
+                    let len = data.length;
+                    if(len > 0) {
+                        setCollText('已收藏');
+                    }
+                    setIndex(index);
+                });
+            }else {
+                setIndex(index);
+            }
+        });
+    }, []);
     const getShopDetail = useCallback(() => {
         const {navigation} = props;
         const {state} = navigation;
@@ -84,6 +104,9 @@ export default function (props: Props) {
         }
     }, []);
     const addCollectionFn = useCallback(() => {
+        if(collText === '已收藏') {
+            return;
+        }
         getUserId().then(user_id => {
             if(!user_id) {
                 NavigatorUtil.goPage('Login');
@@ -107,7 +130,7 @@ export default function (props: Props) {
                 setLoadingIsShow(false);
             });
         });
-    }, []);
+    }, [collText]);
     useEffect(() => {
         getShopDetail();
     }, [props.navigation]);
@@ -128,9 +151,7 @@ export default function (props: Props) {
                                     <TouchableOpacity
                                         activeOpacity={0.9}
                                         key={index}
-                                        onPress={() => {
-                                            setIndex(index)
-                                        }}
+                                        onPress={() => {lookTheShop(imageItem, index)}}
                                     >
                                         <View style={{
                                             ...styles.fooSingle,
@@ -158,7 +179,7 @@ export default function (props: Props) {
                                 <Text
                                     style={{...styles.shop_btn, ...styles.add_coll}}
                                     onPress={addCollectionFn}
-                                >加入收藏</Text>
+                                >{collText}</Text>
                             </View>
                             <Text style={styles.productTxt}>{headerImageData[sIndex].shop_txt}</Text>
                         </View>

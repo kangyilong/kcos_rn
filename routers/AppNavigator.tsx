@@ -55,7 +55,17 @@ const AppNavigator = createStackNavigator({
     },
     UserShopCart: {
         screen: UserShopCart,
-        navigationOptions: () => ({title: '购物车'})
+        navigationOptions: () => ({
+            title: '购物车',
+            headerStyle: {
+                backgroundColor: '#FF9752'
+            },
+            headerTitleStyle: {
+                fontSize: 18,
+                color: '#fff',
+                borderWidth: 0
+            }
+        })
     }
 });
 

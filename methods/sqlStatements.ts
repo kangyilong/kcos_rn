@@ -50,6 +50,32 @@ export const ADD_COLLECTION = `
 `;
 
 /*
+* 判断该商品是否加入了收藏
+* */
+export const IS_SHOP_COLLECTION = `SELECT * FROM userCollection WHERE shop_id = ? AND user_id = ?`;
+
+/*
+* 获取购物车中商品数据
+* */
+export const GET_SHOP_CART_LIST = `
+    SELECT
+    u.code,
+    u.shop_id,
+    u.shop_val,
+    u.shop_pri,
+    s.shop_pic,
+    s.shop_name
+    FROM
+    userCart AS u
+    LEFT JOIN
+    shopMsg AS s
+    ON
+    u.shop_id = s.shop_id
+    WHERE
+    u.user_id = ?
+`;
+
+/*
 * 获取其他商品
 * */
 export const OTHER_SHOP_LIST = `
