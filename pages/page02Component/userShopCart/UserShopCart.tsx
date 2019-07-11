@@ -223,7 +223,9 @@ export default class UserShopCart extends React.PureComponent {
                     <View style={isShowFoo ? appStyles.none : styles.js_box}>
                         <Text style={{fontSize: 14}}>合计:</Text>
                         <Text style={{...appStyles.price, ...appStyles.f14}}>￥{totalPrice}</Text>
-                        <Text style={styles.js_btn}>结算({totalNum})</Text>
+                        <Text style={styles.js_btn} onPress={() => {
+                            NavigatorUtil.goPage('ConfirmOrder');
+                        }}>结算({totalNum})</Text>
                     </View>
                 </View>
             </View>

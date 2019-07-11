@@ -142,6 +142,11 @@ export const DELETE_CART_SHOP = function (params) {
 };
 
 /*
+* 结算下单
+* */
+
+
+/*
 * 用户收藏
 * */
 export const USER_COLLECTION_LIST = `

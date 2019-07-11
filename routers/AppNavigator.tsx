@@ -9,6 +9,7 @@ import OwnerCollection from '../pages/PersonalComponent/PersonalOptionList/Owner
 import OwnerConsumption from '../pages/PersonalComponent/PersonalOptionList/OwnerConsumption';
 import OwnerAddress from '../pages/PersonalComponent/PersonalOptionList/OwnerAddress';
 import UserShopCart from '../pages/page02Component/userShopCart/UserShopCart';
+import ConfirmOrder from '../pages/confirmOrder/ConfirmOrder';
 import {
     createStackNavigator,
     createBottomTabNavigator,
@@ -65,6 +66,10 @@ const AppNavigator = createStackNavigator({
                 borderWidth: 0
             }
         })
+    },
+    ConfirmOrder: {
+        screen: ConfirmOrder,
+        navigationOptions: () => ({title: '确认订单'})
     }
 });
 
