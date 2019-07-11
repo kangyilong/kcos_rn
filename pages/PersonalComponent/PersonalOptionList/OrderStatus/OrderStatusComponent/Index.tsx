@@ -11,11 +11,12 @@ import NoData from '../../../../../components/noData/NoData';
 import SingleOrder from '../../SingleComponent/SingleOrder';
 import Loading from '../../../../../components/loading/Loading';
 import Fetch from '../../../../../methods/Fetch';
-import {getUserId, mergeAttribute, replaceStr} from '../../../../../methods/util';
+import {getUserId, mergeAttribute} from '../../../../../methods/util';
 import appStyles from '../../../../styles/appStyles';
 
 interface Props {
-    QUERY_SQL: string,
+    QUERY_SQL: Function,
+    and_sql: string,
     tigText: string
 }
 
@@ -28,8 +29,8 @@ class OrderStatusComponent extends React.PureComponent<Props, any> {
 
     componentDidMount() {
         getUserId().then(userId => {
-            const { QUERY_SQL } = this.props;
-            let str = replaceStr(QUERY_SQL, userId);
+            const { QUERY_SQL, and_sql } = this.props;
+            let str = QUERY_SQL({user_id: userId, and_sql});
             Fetch({statements: str}).then(data => {
                 let arr = mergeAttribute(data);
                 this.setState({

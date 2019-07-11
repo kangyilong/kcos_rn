@@ -123,6 +123,7 @@ export default class HomePage extends React.Component<Props, any> {
                     <Text style={styles.foo_txt} onPress={() => {
                         this.setState({
                             isOpen: false,
+                            isSideOpen: false,
                             isScreening: true,
                             conditions: {
                                 key: 'type',

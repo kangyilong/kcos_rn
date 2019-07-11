@@ -128,9 +128,24 @@ export const EDIT_SHOP_CART = `
 `;
 
 /*
+* 删除购物车中商品
+* */
+export const DELETE_CART_SHOP = function (params) {
+    return `
+        DELETE FROM
+        userCart
+        WHERE
+        user_id = '${params.user_id}'
+        AND
+        (${params.sql})
+    `;
+};
+
+/*
 * 用户收藏
 * */
-export const USER_COLLECTION_LIST = `SELECT
+export const USER_COLLECTION_LIST = `
+    SELECT
     u.product_id,
     u.shop_id,
     s.shop_pic,
@@ -143,12 +158,28 @@ export const USER_COLLECTION_LIST = `SELECT
     ON
     u.shop_id = s.shop_id
     WHERE
-    u.user_id = '@'`;
+    u.user_id = '@'
+`;
+
+/*
+* 批量移除用户收藏
+* */
+export const BATCH_DEL_COLL = function(params) {
+    return `
+        DELETE FROM
+        userCollection
+        WHERE
+        user_id = '${params.user_id}'
+        AND
+        (${params.sql})
+    `;
+};
 
 /*
 * 消费明细
 * */
-export const USER_CONSUMPTION_LIST = `SELECT
+export const USER_CONSUMPTION_LIST = `
+    SELECT
     uu.*,
     s.shop_pri,
     s.shop_name,
@@ -239,414 +270,63 @@ export let ADD_ADDRESS_DATA = `
 export let DELETE_ADDRESS = `DELETE FROM userAddress WHERE address_id = ?`;
 
 /*
-* 获取我的全部订单
+* 获取我的订单
 * */
-export let OWNERORDER_ALL = `
-    SELECT dd.cvalue AS psTypeName, uuuu.*
-    FROM
-    (SELECT d.cvalue AS zfTypeName, uuu.*
-    FROM
-    (SELECT
-    s.shop_pic AS shopPic,
-    s.shop_name AS shopName,
-    s.shop_Num AS shopNum,
-    s.product_id,
-    uu.*
-    FROM
-    (SELECT
-    u.code,
-    u.shop_sum AS shopSum,
-    u.o_time AS orderTime,
-    u.o_status,
-    u.zf_type,
-    u.ps_type,
-    u.shop_total AS shopTotal,
-    o.shop_id,
-    o.shop_pri AS shopPrice,
-    o.shop_val AS shopVal
-    FROM
-    userOrder AS u
-    LEFT JOIN
-    orderMsg AS o
-    ON
-    u.code = o.p_code
-    WHERE
-    u.user_id = '@'
-    ORDER BY
-    orderTime
-    ) AS uu
-    LEFT JOIN
-    shopMsg AS s
-    ON
-    uu.shop_id = s.shop_id) AS uuu
-    LEFT JOIN
-    dictionary_data AS d
-    ON
-    uuu.zf_type = d.ckey
-    WHERE
-    d.belongs_to = 'userOrder'
-    AND
-    d.type = 'zf_type') AS uuuu
-    LEFT JOIN
-    dictionary_data AS dd
-    ON
-    uuuu.ps_type = dd.ckey
-    WHERE
-    dd.belongs_to = 'userOrder'
-    AND
-    dd.type = 'ps_type'`;
-
-/*
-* 获取我的待付款订单
-* */
-export let OWNERORDER_DFK = `
-    SELECT dd.cvalue AS psTypeName, uuuu.*
-    FROM
-    (SELECT d.cvalue AS zfTypeName, uuu.*
-    FROM
-    (SELECT
-    s.shop_pic AS shopPic,
-    s.shop_name AS shopName,
-    s.shop_Num AS shopNum,
-    s.product_id,
-    uu.*
-    FROM
-    (SELECT
-    u.code,
-    u.shop_sum AS shopSum,
-    u.o_time AS orderTime,
-    u.o_status,
-    u.zf_type,
-    u.ps_type,
-    u.shop_total AS shopTotal,
-    o.shop_id,
-    o.shop_pri AS shopPrice,
-    o.shop_val AS shopVal
-    FROM
-    userOrder AS u
-    LEFT JOIN
-    orderMsg AS o
-    ON
-    u.code = o.p_code
-    WHERE
-    u.o_status = '待付款'
-    AND
-    u.user_id = '@'
-    ORDER BY
-    orderTime
-    ) AS uu
-    LEFT JOIN
-    shopMsg AS s
-    ON
-    uu.shop_id = s.shop_id) AS uuu
-    LEFT JOIN
-    dictionary_data AS d
-    ON
-    uuu.zf_type = d.ckey
-    WHERE
-    d.belongs_to = 'userOrder'
-    AND
-    d.type = 'zf_type') AS uuuu
-    LEFT JOIN
-    dictionary_data AS dd
-    ON
-    uuuu.ps_type = dd.ckey
-    WHERE
-    dd.belongs_to = 'userOrder'
-    AND
-    dd.type = 'ps_type'`;
-/*
-* 获取我的待发货订单
-* */
-export let OWNERORDER_DFH = `
-    SELECT dd.cvalue AS psTypeName, uuuu.*
-    FROM
-    (SELECT d.cvalue AS zfTypeName, uuu.*
-    FROM
-    (SELECT
-    s.shop_pic AS shopPic,
-    s.shop_name AS shopName,
-    s.shop_Num AS shopNum,
-    s.product_id,
-    uu.*
-    FROM
-    (SELECT
-    u.code,
-    u.shop_sum AS shopSum,
-    u.o_time AS orderTime,
-    u.o_status,
-    u.zf_type,
-    u.ps_type,
-    u.shop_total AS shopTotal,
-    o.shop_id,
-    o.shop_pri AS shopPrice,
-    o.shop_val AS shopVal
-    FROM
-    userOrder AS u
-    LEFT JOIN
-    orderMsg AS o
-    ON
-    u.code = o.p_code
-    WHERE
-    u.o_status = '待发货'
-    AND
-    u.user_id = '@'
-    ORDER BY
-    orderTime
-    ) AS uu
-    LEFT JOIN
-    shopMsg AS s
-    ON
-    uu.shop_id = s.shop_id) AS uuu
-    LEFT JOIN
-    dictionary_data AS d
-    ON
-    uuu.zf_type = d.ckey
-    WHERE
-    d.belongs_to = 'userOrder'
-    AND
-    d.type = 'zf_type') AS uuuu
-    LEFT JOIN
-    dictionary_data AS dd
-    ON
-    uuuu.ps_type = dd.ckey
-    WHERE
-    dd.belongs_to = 'userOrder'
-    AND
-    dd.type = 'ps_type'`;
-/*
-* 获取我的待收货订单
-* */
-export let OWNERORDER_DSH = `
-    SELECT dd.cvalue AS psTypeName, uuuu.*
-    FROM
-    (SELECT d.cvalue AS zfTypeName, uuu.*
-    FROM
-    (SELECT
-    s.shop_pic AS shopPic,
-    s.shop_name AS shopName,
-    s.shop_Num AS shopNum,
-    s.product_id,
-    uu.*
-    FROM
-    (SELECT
-    u.code,
-    u.shop_sum AS shopSum,
-    u.o_time AS orderTime,
-    u.o_status,
-    u.zf_type,
-    u.ps_type,
-    u.shop_total AS shopTotal,
-    o.shop_id,
-    o.shop_pri AS shopPrice,
-    o.shop_val AS shopVal
-    FROM
-    userOrder AS u
-    LEFT JOIN
-    orderMsg AS o
-    ON
-    u.code = o.p_code
-    WHERE
-    u.o_status = '待收货'
-    AND
-    u.user_id = '@'
-    ORDER BY
-    orderTime
-    ) AS uu
-    LEFT JOIN
-    shopMsg AS s
-    ON
-    uu.shop_id = s.shop_id) AS uuu
-    LEFT JOIN
-    dictionary_data AS d
-    ON
-    uuu.zf_type = d.ckey
-    WHERE
-    d.belongs_to = 'userOrder'
-    AND
-    d.type = 'zf_type') AS uuuu
-    LEFT JOIN
-    dictionary_data AS dd
-    ON
-    uuuu.ps_type = dd.ckey
-    WHERE
-    dd.belongs_to = 'userOrder'
-    AND
-    dd.type = 'ps_type'`;
-/*
-* 获取我的待评价订单
-* */
-export let OWNERORDER_DPJ = `
-    SELECT dd.cvalue AS psTypeName, uuuu.*
-    FROM
-    (SELECT d.cvalue AS zfTypeName, uuu.*
-    FROM
-    (SELECT
-    s.shop_pic AS shopPic,
-    s.shop_name AS shopName,
-    s.shop_Num AS shopNum,
-    s.product_id,
-    uu.*
-    FROM
-    (SELECT
-    u.code,
-    u.shop_sum AS shopSum,
-    u.o_time AS orderTime,
-    u.o_status,
-    u.zf_type,
-    u.ps_type,
-    u.shop_total AS shopTotal,
-    o.shop_id,
-    o.shop_pri AS shopPrice,
-    o.shop_val AS shopVal
-    FROM
-    userOrder AS u
-    LEFT JOIN
-    orderMsg AS o
-    ON
-    u.code = o.p_code
-    WHERE
-    u.o_status = '待评价'
-    AND
-    u.user_id = '@'
-    ORDER BY
-    orderTime
-    ) AS uu
-    LEFT JOIN
-    shopMsg AS s
-    ON
-    uu.shop_id = s.shop_id) AS uuu
-    LEFT JOIN
-    dictionary_data AS d
-    ON
-    uuu.zf_type = d.ckey
-    WHERE
-    d.belongs_to = 'userOrder'
-    AND
-    d.type = 'zf_type') AS uuuu
-    LEFT JOIN
-    dictionary_data AS dd
-    ON
-    uuuu.ps_type = dd.ckey
-    WHERE
-    dd.belongs_to = 'userOrder'
-    AND
-    dd.type = 'ps_type'`;
-/*
-* 获取我的已完成订单
-* */
-export let OWNERORDER_YWC = `
-    SELECT dd.cvalue AS psTypeName, uuuu.*
-    FROM
-    (SELECT d.cvalue AS zfTypeName, uuu.*
-    FROM
-    (SELECT
-    s.shop_pic AS shopPic,
-    s.shop_name AS shopName,
-    s.shop_Num AS shopNum,
-    s.product_id,
-    uu.*
-    FROM
-    (SELECT
-    u.code,
-    u.shop_sum AS shopSum,
-    u.o_time AS orderTime,
-    u.o_status,
-    u.zf_type,
-    u.ps_type,
-    u.shop_total AS shopTotal,
-    o.shop_id,
-    o.shop_pri AS shopPrice,
-    o.shop_val AS shopVal
-    FROM
-    userOrder AS u
-    LEFT JOIN
-    orderMsg AS o
-    ON
-    u.code = o.p_code
-    WHERE
-    u.o_status = '已完成'
-    AND
-    u.user_id = '@'
-    ORDER BY
-    orderTime
-    ) AS uu
-    LEFT JOIN
-    shopMsg AS s
-    ON
-    uu.shop_id = s.shop_id) AS uuu
-    LEFT JOIN
-    dictionary_data AS d
-    ON
-    uuu.zf_type = d.ckey
-    WHERE
-    d.belongs_to = 'userOrder'
-    AND
-    d.type = 'zf_type') AS uuuu
-    LEFT JOIN
-    dictionary_data AS dd
-    ON
-    uuuu.ps_type = dd.ckey
-    WHERE
-    dd.belongs_to = 'userOrder'
-    AND
-    dd.type = 'ps_type'`;
-/*
-* 获取我的已取消订单
-* */
-export let OWNERORDER_YQX = `
-    SELECT dd.cvalue AS psTypeName, uuuu.*
-    FROM
-    (SELECT d.cvalue AS zfTypeName, uuu.*
-    FROM
-    (SELECT
-    s.shop_pic AS shopPic,
-    s.shop_name AS shopName,
-    s.shop_Num AS shopNum,
-    s.product_id,
-    uu.*
-    FROM
-    (SELECT
-    u.code,
-    u.shop_sum AS shopSum,
-    u.o_time AS orderTime,
-    u.o_status,
-    u.zf_type,
-    u.ps_type,
-    u.shop_total AS shopTotal,
-    o.shop_id,
-    o.shop_pri AS shopPrice,
-    o.shop_val AS shopVal
-    FROM
-    userOrder AS u
-    LEFT JOIN
-    orderMsg AS o
-    ON
-    u.code = o.p_code
-    WHERE
-    u.o_status = '已取消'
-    AND
-    u.user_id = '@'
-    ORDER BY
-    orderTime
-    ) AS uu
-    LEFT JOIN
-    shopMsg AS s
-    ON
-    uu.shop_id = s.shop_id) AS uuu
-    LEFT JOIN
-    dictionary_data AS d
-    ON
-    uuu.zf_type = d.ckey
-    WHERE
-    d.belongs_to = 'userOrder'
-    AND
-    d.type = 'zf_type') AS uuuu
-    LEFT JOIN
-    dictionary_data AS dd
-    ON
-    uuuu.ps_type = dd.ckey
-    WHERE
-    dd.belongs_to = 'userOrder'
-    AND
-    dd.type = 'ps_type'`;
+export let OWNERORDER_ALL = function(params) {
+    return `
+        SELECT dd.cvalue AS psTypeName, uuuu.*
+        FROM
+        (SELECT d.cvalue AS zfTypeName, uuu.*
+        FROM
+        (SELECT
+        s.shop_pic AS shopPic,
+        s.shop_name AS shopName,
+        s.shop_Num AS shopNum,
+        s.product_id,
+        uu.*
+        FROM
+        (SELECT
+        u.code,
+        u.shop_sum AS shopSum,
+        u.o_time AS orderTime,
+        u.o_status,
+        u.zf_type,
+        u.ps_type,
+        u.shop_total AS shopTotal,
+        o.shop_id,
+        o.shop_pri AS shopPrice,
+        o.shop_val AS shopVal
+        FROM
+        userOrder AS u
+        LEFT JOIN
+        orderMsg AS o
+        ON
+        u.code = o.p_code
+        WHERE
+        u.user_id = '${params.user_id}'
+        ${params.and_sql}
+        ORDER BY
+        orderTime
+        ) AS uu
+        LEFT JOIN
+        shopMsg AS s
+        ON
+        uu.shop_id = s.shop_id) AS uuu
+        LEFT JOIN
+        dictionary_data AS d
+        ON
+        uuu.zf_type = d.ckey
+        WHERE
+        d.belongs_to = 'userOrder'
+        AND
+        d.type = 'zf_type') AS uuuu
+        LEFT JOIN
+        dictionary_data AS dd
+        ON
+        uuuu.ps_type = dd.ckey
+        WHERE
+        dd.belongs_to = 'userOrder'
+        AND
+        dd.type = 'ps_type'
+    `;
+};

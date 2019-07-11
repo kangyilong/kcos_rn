@@ -43,8 +43,7 @@ const AppNavigator = createStackNavigator({
         }
     },
     OwnerCollection: { // 用户收藏页
-        screen: OwnerCollection,
-        navigationOptions: () => ({title: '商品收藏'})
+        screen: OwnerCollection
     },
     OwnerConsumption: {
         screen: OwnerConsumption,

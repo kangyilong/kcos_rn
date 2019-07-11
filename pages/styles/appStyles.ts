@@ -65,5 +65,14 @@ export default {
     },
     hrefColor: {
         color: '#1890ff'
-    }
+    },
+    all_select: {
+        width: 20,
+        height: 20,
+        borderStyle: 'solid',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 10,
+        overflow: 'hidden'
+    },
 }

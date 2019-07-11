@@ -11,7 +11,7 @@ import {
 import FooComponent from '../../../components/fooComponent/FooComponent';
 import NoData from '../../../components/noData/NoData';
 import SingleShopMsg from './SingleShopMsg';
-import {GET_SHOP_CART_LIST} from '../../../methods/sqlStatements';
+import {GET_SHOP_CART_LIST, DELETE_CART_SHOP} from '../../../methods/sqlStatements';
 import appStyles from "../../styles/appStyles";
 import Fetch from "../../../methods/Fetch";
 import {getUserId} from "../../../methods/util";
@@ -22,6 +22,7 @@ import {SELECT_ICON, UN_SELECT_ICON} from "../../../methods/requireImage";
 const {width} = Dimensions.get('window');
 
 export default class UserShopCart extends React.PureComponent {
+    user_id = '';
     state = {
         cartData: [],
         cloneCartData: [],
@@ -37,12 +38,14 @@ export default class UserShopCart extends React.PureComponent {
         totalPrice: 0,
         totalNum: 0
     };
+
     componentDidMount() {
         getUserId().then(user_id => {
-            if(!user_id) {
+            if (!user_id) {
                 NavigatorUtil.goPage('Login');
                 return;
             }
+            this.user_id = user_id;
             Fetch({statements: GET_SHOP_CART_LIST, parameter: JSON.stringify([user_id])}).then(data => {
                 this.setState({
                     isLoadOk: true,
@@ -52,21 +55,22 @@ export default class UserShopCart extends React.PureComponent {
             });
         });
     }
+
     selectSingleShop = (shopMsg, type = '') => {
         const {shop_id} = shopMsg;
         let list: Array<any> = this.state.shopIdList;
         let selectedList = this.state.selectedShopList;
         let len = this.state.cartData.length;
         let dex = list.indexOf(shop_id);
-        if(!type) {
-            if(dex !== -1) {
+        if (!type) {
+            if (dex !== -1) {
                 list.splice(dex, 1);
                 selectedList.splice(dex, 1);
-            }else {
+            } else {
                 list.push(shop_id);
                 selectedList.push(shopMsg);
             }
-        }else {
+        } else {
             selectedList[dex] = shopMsg;
         }
         let totalList = selectedList.map(item => (parseFloat(item.shop_pri) * parseInt(item.shop_val)));
@@ -76,11 +80,11 @@ export default class UserShopCart extends React.PureComponent {
             totalPrice: totalList.length && totalList.reduce((x, y) => x + y),
             totalNum: totalList.length
         });
-        if(len === list.length) {
+        if (len === list.length) {
             this.setState({
                 isSelAll: true
             });
-        }else {
+        } else {
             this.setState({
                 isSelAll: false
             });
@@ -97,20 +101,21 @@ export default class UserShopCart extends React.PureComponent {
     selectedAddShop = () => {
         const {isSelAll, isChange, cartData} = this.state;
         const len = cartData.length;
-        if(!isSelAll) {
+        if (!isSelAll) {
             this.setState({
                 isSelAll: !isSelAll,
                 isChange: !isChange,
                 shopIdList: cartData.map(item => item.shop_id),
-                selectedShopList: cartData.map(item => ({
+                selectedShopList: cartData.map((item, index) => ({
                     shop_id: item.shop_id,
                     shop_val: item.shop_val,
-                    shop_pri: item.shop_pri
+                    shop_pri: item.shop_pri,
+                    index
                 })),
                 totalPrice: cartData.map(item => parseFloat(item.shop_pri) * parseInt(item.shop_val)).reduce((x, y) => x + y),
                 totalNum: len
             });
-        }else {
+        } else {
             this.setState({
                 isSelAll: !isSelAll,
                 isChange: !isChange,
@@ -121,17 +126,32 @@ export default class UserShopCart extends React.PureComponent {
         }
     };
     delShopOption = () => {
-        let {selectedShopList, cartData, cloneCartData} = this.state;
-        let list = selectedShopList.map(item => item.index);
-        list.forEach(item => {
-            cartData[item] = false;
-            cloneCartData[item] = false;
-        });
-        this.setState({
-            cartData: cartData.filter(item => item),
-            cloneCartData: cloneCartData.filter(item => item)
-        })
+        let {selectedShopList, shopIdList, cartData, cloneCartData} = this.state;
+        if (selectedShopList.length > 0) {
+            let list = selectedShopList.map(item => item.index);
+            list.forEach(item => {
+                cartData[item] = false;
+                cloneCartData[item] = false;
+            });
+            let sql = '', len = shopIdList.length - 1;
+            shopIdList.forEach((item, index) => {
+                if (len === index) {
+                    sql += `shop_id = '${item}'`;
+                } else {
+                    sql += `shop_id = '${item}' OR `;
+                }
+            });
+            console.log(DELETE_CART_SHOP({user_id: this.user_id, sql}));
+            Fetch({statements: DELETE_CART_SHOP({user_id: this.user_id, sql})}).then(() => {
+                this.setState({
+                    cartData: cartData.filter(item => item),
+                    cloneCartData: cloneCartData.filter(item => item)
+                });
+            });
+        } else {
+        }
     };
+
     render() {
         const {
             cartData,
@@ -147,10 +167,9 @@ export default class UserShopCart extends React.PureComponent {
             cloneCartData
         } = this.state;
         let len = cartData.length;
-        if(!isLoadOk) {
-            return <Loading />
+        if (!isLoadOk) {
+            return <Loading/>
         }
-        console.log(cartData, cloneCartData);
         return (
             <View style={styles.cart_box}>
                 <View style={len > 0 ? styles.cart_header : appStyles.none}>
@@ -196,7 +215,7 @@ export default class UserShopCart extends React.PureComponent {
                         >
                             <Text style={styles.all_select} onPress={this.selectedAddShop}/>
                         </ImageBackground>
-                        <Text style={{fontSize: 14}}>全选</Text>
+                        <Text style={{fontSize: 14}} onPress={this.selectedAddShop}>全选</Text>
                     </View>
                     <View style={isShowFoo ? '' : appStyles.none}>
                         <Text style={styles.shop_del} onPress={this.delShopOption}>删除</Text>
@@ -219,7 +238,8 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         position: 'relative',
         backgroundColor: '#f1f1f1',
-        paddingTop: 59
+        paddingTop: 59,
+        paddingBottom: 80
     },
     cart_header: {
         position: 'absolute',

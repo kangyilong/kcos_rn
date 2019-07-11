@@ -8,7 +8,7 @@ import {OWNERORDER_ALL} from '../../../methods/sqlStatements';
 class OwnerOrder extends React.PureComponent {
     render() {
         return (
-            <OrderStatusComponent QUERY_SQL={OWNERORDER_ALL} tigText={'暂无订单'}/>
+            <OrderStatusComponent QUERY_SQL={OWNERORDER_ALL} and_sql=' ' tigText={'暂无订单'}/>
         )
     }
 }

@@ -15,13 +15,26 @@ interface Props {
 }
 export default function SingleConsumption(props: Props) {
     const { singleData, lookShop } = props;
+    console.log(singleData);
     return (
         <View style={styles.single_consump}>
             <Text style={{...appStyles.f12, ...appStyles.textColor333, width: 50}}>{singleData.run_type}</Text>
-            <Text style={{...appStyles.f12, ...appStyles.textColor333, width: 135, textAlign: 'center'}}>{moment(parseInt(singleData.run_time)).format('YYYY-MM-DD HH:mm:ss')}</Text>
-            <Text numberOfLines={1} style={{...appStyles.f12, ...appStyles.textColor333, ...appStyles.price}}>{singleData.money_run} 元</Text>
+            <Text style={{
+                ...appStyles.f12,
+                ...appStyles.textColor333,
+                width: 135,
+                textAlign: 'center'
+            }}>{moment(parseInt(singleData.run_time)).format('YYYY-MM-DD HH:mm:ss')}</Text>
             <Text
-                style={{...appStyles.hrefColor, ...appStyles.f12}}
+                numberOfLines={1}
+                style={{
+                    ...appStyles.f12,
+                    ...appStyles.textColor333,
+                    ...appStyles.price,
+                    textDecorationLine: singleData.run_type === '取消订单' ? 'line-through' : 'none'
+                }}>{singleData.money_run} 元</Text>
+            <Text
+                style={{...appStyles.hrefColor, ...appStyles.f12, opacity: singleData.p_code ? 1 : 0}}
                 onPress={() => {lookShop(singleData.p_code)}}
             >查看商品</Text>
         </View>

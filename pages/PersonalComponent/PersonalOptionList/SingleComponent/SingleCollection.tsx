@@ -6,22 +6,42 @@ import {
     Image,
     StyleSheet,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
+    ImageBackground
 } from 'react-native';
 import appStyles from '../../../styles/appStyles';
 import NavigatorUtil from "../../../../methods/NavigatorUtil";
+import {SELECT_ICON, UN_SELECT_ICON} from "../../../../methods/requireImage";
 
 const {width} = Dimensions.get('window');
 
 interface Props {
-    singleCollectionData: any
+    singleCollectionData: any,
+    isShow: boolean,
+    isReset: boolean,
+    isSetAll: boolean,
+    isSetChange: boolean,
+    dIndex: number,
+    setSingleColl: Function
 }
 
 export default function SingleCollection(props: Props) {
-    const {shop_pic = '', shop_id, shop_name, product_id, shop_pri} = props.singleCollectionData;
+    const {isShow, isReset, isSetAll, isSetChange, dIndex, singleCollectionData, setSingleColl} = props;
+    const {shop_pic = '', shop_id, shop_name, product_id, shop_pri} = singleCollectionData;
+    const [isShowIcon, setIsShowIcon] = useState(false);
     const callectionDetails = useCallback((params) => {
         NavigatorUtil.goPage('StorePage', params);
     }, []);
+    const showIcon = useCallback(() => {
+        setIsShowIcon(!isShowIcon);
+        setSingleColl({shop_id, dIndex});
+    }, [isShowIcon]);
+    useEffect(() => {
+        setIsShowIcon(false);
+    }, [isReset]);
+    useEffect(() => {
+        setIsShowIcon(isSetAll);
+    }, [isSetChange]);
     return (
         <TouchableOpacity
             activeOpacity={0.9}
@@ -45,6 +65,15 @@ export default function SingleCollection(props: Props) {
                     >{shop_name}</Text>
                     <Text style={{...appStyles.f20, ...appStyles.price}}>{shop_pri} 元</Text>
                 </View>
+                <ImageBackground
+                    style={{width: 20, height: 20, position: 'absolute', top: 0, right: 6, opacity: isShow ? 1 : 0}}
+                    source={isShowIcon ? SELECT_ICON : UN_SELECT_ICON}
+                >
+                    <Text
+                        style={{...appStyles.all_select}}
+                        onPress={showIcon}
+                    />
+                </ImageBackground>
             </View>
         </TouchableOpacity>
     )
@@ -54,7 +83,8 @@ const styles = StyleSheet.create({
         width: width / 2 - 30,
         paddingTop: 6,
         paddingBottom: 20,
-        marginLeft: 20
+        marginLeft: 20,
+        position: 'relative'
     },
     coll_img: {
         width: width / 2 - 30 - 20,

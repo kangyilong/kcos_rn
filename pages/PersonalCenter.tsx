@@ -5,7 +5,8 @@ import {
     View,
     Text,
     Button,
-    StyleSheet
+    StyleSheet,
+    ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
 import NavigatorUtil from '../methods/NavigatorUtil';
@@ -50,26 +51,28 @@ class PersonalCenter extends React.Component<Props, any> {
     render () {
         const { tintColor } = this.props;
         return(
-            <View style={styles.Page}>
-                <PersonalHeader tintColor={tintColor} />
-                <View style={styles.hr20}></View>
-                <PersonalContainer />
-                <View>
-                    <Button
-                        title={'设置主题颜色（红色）'}
-                        onPress={() => {
-                            this.props.actionTintColorFn('red');
-                        }}
-                    />
-                    <Button
-                        title={'注销登录'}
-                        onPress={() => {
-                            delUserId();
-                            NavigatorUtil.goPage('HomePage')
-                        }}
-                    />
+            <ScrollView>
+                <View style={styles.Page}>
+                    <PersonalHeader tintColor={tintColor} />
+                    <View style={styles.hr20}></View>
+                    <PersonalContainer />
+                    <View>
+                        <Button
+                            title={'设置主题颜色（红色）'}
+                            onPress={() => {
+                                this.props.actionTintColorFn('red');
+                            }}
+                        />
+                        <Button
+                            title={'注销登录'}
+                            onPress={() => {
+                                delUserId();
+                                NavigatorUtil.goPage('HomePage')
+                            }}
+                        />
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
