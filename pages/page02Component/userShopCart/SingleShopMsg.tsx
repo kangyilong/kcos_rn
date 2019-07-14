@@ -7,7 +7,8 @@ import {
     TextInput,
     StyleSheet,
     Dimensions,
-    ImageBackground
+    ImageBackground,
+    TouchableOpacity
 } from 'react-native';
 import appStyles from "../../styles/appStyles";
 import {SELECT_ICON, UN_SELECT_ICON} from "../../../methods/requireImage";
@@ -56,23 +57,25 @@ export default function SingleShopMsg(props: Props) {
     }, [shop_val]);
     return (
         <View style={styles.shop_single_box}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}
+                activeOpacity={0.9}
+                onPress={() => {
+                    setIsShowIcon(!isShowIcon);
+                    selectSingleShop({shop_id, shop_val: iupNumber, shop_pri, index: defIndex});
+                }}
+            >
                 <ImageBackground
                     style={{width: 20, height: 20}}
                     source={isShowIcon ? SELECT_ICON : UN_SELECT_ICON}
                 >
-                    <Text
-                        style={styles.all_select}
-                        onPress={() => {
-                            setIsShowIcon(!isShowIcon);
-                            selectSingleShop({shop_id, shop_val: iupNumber, shop_pri, index: defIndex});
-                        }}/>
+                    <Text style={styles.all_select}/>
                 </ImageBackground>
                 <Image
                     style={{width: 100, height: 100}}
                     source={{uri: shop_pic}}
                 />
-            </View>
+            </TouchableOpacity>
             <View style={{marginLeft: 10}}>
                 <Text style={styles.shop_name} numberOfLines={1}>{shop_name}</Text>
                 <Text style={styles.shop_det}>{shop_name.indexOf('-') !== -1 ? shop_name.split('-')[1] : ''}</Text>

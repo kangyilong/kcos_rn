@@ -66,10 +66,6 @@ const AppNavigator = createStackNavigator({
                 borderWidth: 0
             }
         })
-    },
-    ConfirmOrder: {
-        screen: ConfirmOrder,
-        navigationOptions: () => ({title: '确认订单'})
     }
 });
 
@@ -82,6 +78,10 @@ const SwitchNavigator = createSwitchNavigator({
     },
     AppNavigator: {
         screen: AppNavigator
+    },
+    ConfirmOrder: {
+        screen: ConfirmOrder,
+        navigationOptions: () => ({title: '确认订单'})
     }
 });
 

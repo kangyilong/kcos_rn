@@ -141,7 +141,6 @@ export default class UserShopCart extends React.PureComponent {
                     sql += `shop_id = '${item}' OR `;
                 }
             });
-            console.log(DELETE_CART_SHOP({user_id: this.user_id, sql}));
             Fetch({statements: DELETE_CART_SHOP({user_id: this.user_id, sql})}).then(() => {
                 this.setState({
                     cartData: cartData.filter(item => item),
@@ -150,6 +149,16 @@ export default class UserShopCart extends React.PureComponent {
             });
         } else {
         }
+    };
+
+    settlementShop = () => {
+        const {selectedShopList} = this.state;
+        if(selectedShopList.length === 0) {
+            return false;
+        }
+        NavigatorUtil.goPage('ConfirmOrder', {
+            selectedShopList
+        });
     };
 
     render() {
@@ -223,9 +232,7 @@ export default class UserShopCart extends React.PureComponent {
                     <View style={isShowFoo ? appStyles.none : styles.js_box}>
                         <Text style={{fontSize: 14}}>合计:</Text>
                         <Text style={{...appStyles.price, ...appStyles.f14}}>￥{totalPrice}</Text>
-                        <Text style={styles.js_btn} onPress={() => {
-                            NavigatorUtil.goPage('ConfirmOrder');
-                        }}>结算({totalNum})</Text>
+                        <Text style={styles.js_btn} onPress={this.settlementShop}>结算({totalNum})</Text>
                     </View>
                 </View>
             </View>

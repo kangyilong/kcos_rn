@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
         width: width / 5 - 10,
     },
     headerFoo: {
-        marginTop: 20,
+        marginTop: 40,
         paddingLeft: 10,
         paddingRight: 10
     },

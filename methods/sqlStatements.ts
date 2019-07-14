@@ -142,9 +142,79 @@ export const DELETE_CART_SHOP = function (params) {
 };
 
 /*
+* 根据shop_id查商品详情
+* */
+export const GET_SHOPID_DETAIL = function(params) {
+    return `
+        SELECT
+        *
+        FROM
+        shopMsg
+        WHERE
+       ${params.sql}
+    `;
+};
+
+/*
 * 结算下单
 * */
+export const SUBMIT_ORDER = `
+    INSERT INTO
+    userOrder
+    (code,
+    user_id,
+    shop_total,
+    shop_sum,
+    add_ress_id,
+    zf_type,
+    ps_type,
+    o_time,
+    remark,
+    o_status)
+    values
+    (?, ?, ?, ?, ?, ?, ?, ?, ?, '待付款')
+`;
 
+/*
+* 新增订单详情
+* */
+export const ADD_ORDER_DETAIL = `
+    INSERT INTO
+    orderMsg
+    (order_code,
+    product_id,
+    shop_id,
+    p_code,
+    shop_pri,
+    shop_val)
+    values
+    (?, ?, ?, ?, ?, ?)
+`;
+
+/*
+* 根据shop_id、user_id删除购物车商品
+* */
+export const REMOVE_CART_SHOP = `
+    DELETE
+    FROM
+    userCart
+    WHERE
+    shop_id = ?
+    AND
+    user_id = ?
+`;
+
+/*
+* 更新库存
+* */
+export const UPDATE_SHOP_NUM = `
+    UPDATE
+    shopMsg
+    SET
+    shop_Num = ?
+    WHERE
+    shop_id = ?
+`;
 
 /*
 * 用户收藏
@@ -226,6 +296,23 @@ export let OWNER_ADDRESS_LIST = `
 * 设置为默认地址
 * */
 export let SET_ADDRESS_DEFAULTE = `UPDATE userAddress SET is_default = $ WHERE address_id = '@'`;
+
+/*
+* 获取用户的默认收货地址
+* */
+export const GET_DEFAULT_ADDRESS = `
+    SELECT
+    user_province,
+    user_city,
+    user_county,
+    user_area,
+    user_mobile,
+    user_name
+    FROM
+    userAddress
+    WHERE
+    user_id = ? AND is_default = 1
+`;
 
 /*
 * 将默认地址去掉
