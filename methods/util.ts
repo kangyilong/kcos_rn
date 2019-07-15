@@ -13,8 +13,13 @@ export async function setUserId(userId) {
     await AsyncStorage.setItem('userId', userId);
 }
 
-export async function delUserId() {
+export function setUserMsg(msg) {
+    AsyncStorage.setItem('userMsg', JSON.stringify(msg));
+}
+
+export async function delUserMsg() {
     await AsyncStorage.removeItem('userId');
+    await AsyncStorage.removeItem('userMsg');
 }
 
 // 将sql语句中@占位符替换成字段或值

@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import {
     View,
     Text,
@@ -7,8 +7,11 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native';
+import {SET_USER_HPIC} from '../../methods/sqlStatements';
 import appStyles from '../styles/appStyles';
 import ImagePicker from 'react-native-image-picker';
+import Fetch from "../../methods/Fetch";
+import {setUserMsg} from "../../methods/util";
 
 const photoOptions = {
     title: '请选择',
@@ -25,37 +28,74 @@ const photoOptions = {
 };
 
 interface Props {
-    tintColor: string
+    tintColor: string,
+    navigation: {
+        addListener: Function
+    }
 }
 
 export default class PersonalHeader extends React.PureComponent<Props, any> {
+    _navListener = null;
     state = {
-        url: ''
+        url: '',
+        userMsg: {
+            user_hpic: '',
+            user_nick_name: '',
+            userLevel: '',
+            user_id: ''
+        },
+        user_hpic: ''
     };
+    componentDidMount() {
+        AsyncStorage.getItem('userMsg').then(msg => {
+            let userMsg = JSON.parse(msg);
+            console.log(userMsg);
+            this.setState({
+                userMsg
+            });
+        });
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            AsyncStorage.getItem('userMsg').then(msg => {
+                let userMsg = JSON.parse(msg);
+                this.setState({
+                    userMsg
+                });
+            });
+        });
+    }
     uploadImage = (uri) => {
-        let formData = new FormData();
-        let file: any = {uri, type: 'multipart/form-data', name: 'image.png'};
-        formData.append("files", file);
-        console.log('formData:', formData);
+        const {userMsg} = this.state;
         let params = {
-            statements: '',
-            parameter: formData
+            statements: SET_USER_HPIC,
+            parameter: JSON.stringify([uri, userMsg.user_id])
         };
-        // Fetch(params).then((responseData)=>{
-        //     console.log(responseData)  //得到的uri（http格式）拿到后进行操作吧
-        // }).catch((error)=>{console.error('error',error)});
+        Fetch(params).then(()=>{
+            this.setState({
+                userMsg: {
+                    ...userMsg,
+                    user_hpic: uri
+                }
+            });
+            setUserMsg(JSON.stringify({
+                ...userMsg,
+                user_hpic: uri
+            }))
+        }).catch((error) => {console.error('error',error)});
     };
     openMyCamera = () => {
         ImagePicker.showImagePicker(photoOptions, (res) => {
-            console.log('ImagePicker', res);
             if(res.didCancel || !res.uri) {
                 return;
             }
             this.uploadImage(res.uri);
         })
     };
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
     render() {
         const { tintColor } = this.props;
+        const {userMsg} = this.state;
         return (
             <View style={styles.personal_header}>
                 <TouchableOpacity
@@ -65,17 +105,17 @@ export default class PersonalHeader extends React.PureComponent<Props, any> {
                     <View style={styles.left_box}>
                         <Image
                             style={styles.left_img}
-                            source={require('../../assets/images/ky.jpg')}
+                            source={{uri: userMsg ? userMsg.user_hpic : ''}}
                         />
                     </View>
                 </TouchableOpacity>
                 <View style={styles.right_box}>
                     <View style={styles.name}>
-                        <Text style={{...appStyles.f24, color: tintColor}}>ksy</Text>
+                        <Text style={{...appStyles.f24, color: tintColor}}>{userMsg ? userMsg.user_nick_name : ''}</Text>
                     </View>
                     <View>
                         <Text style={{...appStyles.f18, color: tintColor}}>
-                            等级：超级会员
+                            等级：{userMsg ? userMsg.userLevel : ''}
                         </Text>
                     </View>
                 </View>

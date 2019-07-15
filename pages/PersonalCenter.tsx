@@ -10,14 +10,15 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import NavigatorUtil from '../methods/NavigatorUtil';
-import {delUserId, getUserId} from '../methods/util';
+import {delUserMsg, getUserId} from '../methods/util';
 import {actionTintColor, actionUserId} from '../redux/action';
 import PersonalHeader from './PersonalComponent/PersonalHeader';
 import PersonalContainer from './PersonalComponent/PersonalContainer';
 
 interface Props {
     navigation: {
-        navigate: Function
+        navigate: Function,
+        addListener: Function
     },
     isFocused: boolean,
     actionTintColorFn: Function,
@@ -49,11 +50,11 @@ class PersonalCenter extends React.Component<Props, any> {
         this.props.actionUserIdFn(userId);
     }
     render () {
-        const { tintColor } = this.props;
+        const { tintColor, navigation } = this.props;
         return(
             <ScrollView>
                 <View style={styles.Page}>
-                    <PersonalHeader tintColor={tintColor} />
+                    <PersonalHeader tintColor={tintColor} navigation={navigation}/>
                     <View style={styles.hr20}></View>
                     <PersonalContainer />
                     <View>
@@ -66,7 +67,7 @@ class PersonalCenter extends React.Component<Props, any> {
                         <Button
                             title={'注销登录'}
                             onPress={() => {
-                                delUserId();
+                                delUserMsg();
                                 NavigatorUtil.goPage('HomePage')
                             }}
                         />

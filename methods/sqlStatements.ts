@@ -422,3 +422,44 @@ export let OWNERORDER_ALL = function(params) {
         dd.type = 'ps_type'
     `;
 };
+
+/*
+* 登录并获取用户信息
+* */
+export const GET_USER_MSG = `
+    SELECT
+    u.*,
+    d.cvalue AS userLevel
+    FROM
+    (SELECT
+    user_id,
+    user_nick_name,
+    user_level,
+    user_hpic
+    FROM
+    userMsg
+    WHERE
+    user_nick_name = ?
+    AND
+    user_paw = ?) AS u
+    LEFT JOIN
+    dictionary_data AS d
+    ON
+    u.user_level = d.ckey
+    WHERE
+    d.belongs_to = 'userMsg'
+    AND
+    d.type = 'level'
+`;
+
+/*
+* 设置头像
+* */
+export const SET_USER_HPIC = `
+    UPDATE
+    userMsg
+    SET
+    user_hpic = ?
+    WHERE
+    user_id = ?
+`;
