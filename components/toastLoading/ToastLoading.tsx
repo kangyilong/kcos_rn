@@ -7,7 +7,6 @@ import {
     Dimensions,
     ActivityIndicator
 } from 'react-native';
-import appStyles from "../../pages/styles/appStyles";
 
 const {width} = Dimensions.get('window');
 
@@ -16,8 +15,11 @@ interface Props {
 }
 export default function ToastLoading(props: Props) {
     const isShow = props.isShow;
+    if(!isShow) {
+        return null;
+    }
     return (
-        <View style={isShow ? styled.loadBox : appStyles.none}>
+        <View style={styled.loadBox}>
             <ActivityIndicator
                 style={styled.indicator}
                 size="large"

@@ -62,6 +62,7 @@ class PersonalCenter extends React.Component<Props, any> {
                             title={'设置主题颜色（红色）'}
                             onPress={() => {
                                 this.props.actionTintColorFn('red');
+                                NavigatorUtil.goPage('HomePage');
                             }}
                         />
                         <Button
@@ -80,7 +81,8 @@ class PersonalCenter extends React.Component<Props, any> {
 const styles = StyleSheet.create({
     Page: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        paddingTop: 30
     },
     hr20: {
         height: 20,

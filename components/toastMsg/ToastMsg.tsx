@@ -16,8 +16,11 @@ interface Props {
 }
 export default function ToastMsg(props: Props) {
     const isShow = props.isShow;
+    if(!isShow) {
+        return null;
+    }
     return (
-        <View style={isShow ? styles.toast_box : appStyles.none}>
+        <View style={styles.toast_box}>
             <Text style={{color: '#fff', ...appStyles.f16}}>{props.toastMsg}</Text>
         </View>
     )

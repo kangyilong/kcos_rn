@@ -1,7 +1,10 @@
+import {
+    Alert
+} from 'react-native';
 import deviceinfo from 'react-native-device-info';
-export default async function Fetch(params) {
-    const local = await deviceinfo.getIPAddress();
-    return fetch(`http://169.254.166.121:3666/wantMsg`, {
+export default function Fetch(params) {
+    // const local = await deviceinfo.getIPAddress();
+    return fetch(`http://localhost:3666/wantMsg`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -14,5 +17,7 @@ export default async function Fetch(params) {
         } else {
             return Promise.reject('something went wrong!')
         }
+    }).catch(e => {
+        Alert.alert(e.toString());
     });
 }

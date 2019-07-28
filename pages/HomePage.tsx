@@ -16,8 +16,8 @@ import NavigatorUtil from '../methods/NavigatorUtil';
 import SwiperComponent from '../components/swiper/Swiper';
 import Con01Component from './page01Component/Con01';
 import Con02Component from './page01Component/Con02';
-import FETCH from '../methods/Fetch';
 import {HOMEPAGE_BANNER} from '../methods/sqlStatements';
+import FETCH from '../methods/Fetch';
 
 const {width, height} = Dimensions.get('window');
 

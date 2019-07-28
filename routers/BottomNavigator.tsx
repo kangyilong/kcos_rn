@@ -12,14 +12,16 @@ export default createBottomTabNavigator({
         screen: HomePage,
         navigationOptions: {
             tabBarLabel: '商城',
-            tabBarIcon: ({focused, tintColor}) => (
-                <Store
-                    name='store'
-                    size={24}
-                    color={tintColor}
-                    paddingTop={10}
-                />
-            ),
+            tabBarIcon: ({focused, tintColor}) => {
+                return (
+                    <Store
+                        name='store'
+                        size={24}
+                        color={tintColor}
+                        paddingTop={10}
+                    />
+                );
+            },
             header: null
         }
     },
@@ -27,14 +29,16 @@ export default createBottomTabNavigator({
         screen: PersonalCenter,
         navigationOptions: {
             tabBarLabel: '个人中心',
-            tabBarIcon: ({focused, tintColor}) => (
-                <User
-                    name='user'
-                    size={20}
-                    color={tintColor}
-                    paddingTop={10}
-                />
-            )
+            tabBarIcon: ({focused, tintColor}) => {
+                return (
+                    <User
+                        name='user'
+                        size={20}
+                        color={tintColor}
+                        paddingTop={10}
+                    />
+                )
+            }
         }
     }
 }, {

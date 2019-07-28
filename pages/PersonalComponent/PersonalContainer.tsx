@@ -28,7 +28,7 @@ const singleList = [
         title: '收货地址'
     },{
         id: '5',
-        title: '修改个人信息'
+        title: '手势密码'
     }
 ];
 
@@ -51,6 +51,7 @@ export default class PersonalContainer extends React.PureComponent {
                 NavigatorUtil.goPage('OwnerAddress');
                 break;
             case '5':
+                NavigatorUtil.goPage('GesturesPassword');
                 break;
         }
     };

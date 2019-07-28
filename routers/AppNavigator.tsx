@@ -8,6 +8,7 @@ import WelcomePage from '../pages/WelcomePage';
 import OwnerCollection from '../pages/PersonalComponent/PersonalOptionList/OwnerCollection';
 import OwnerConsumption from '../pages/PersonalComponent/PersonalOptionList/OwnerConsumption';
 import OwnerAddress from '../pages/PersonalComponent/PersonalOptionList/OwnerAddress';
+import GesturesPassword from '../pages/PersonalComponent/PersonalOptionList/GesturesPassword';
 import UserShopCart from '../pages/page02Component/userShopCart/UserShopCart';
 import ConfirmOrder from '../pages/confirmOrder/ConfirmOrder';
 import {
@@ -22,7 +23,10 @@ import TopNavigator from './TopNavigator';
 
 const AppNavigator = createStackNavigator({
     BottomNavigator: { // 底部tab
-        screen: BottomNavigator
+        screen: BottomNavigator,
+        navigationOptions: {
+            header: null
+        }
     },
     TopNavigator: { // 顶部tab
         screen: TopNavigator
@@ -52,6 +56,9 @@ const AppNavigator = createStackNavigator({
     },
     OwnerAddress: {
         screen: OwnerAddress
+    },
+    GesturesPassword: {
+        screen: GesturesPassword
     },
     UserShopCart: {
         screen: UserShopCart,

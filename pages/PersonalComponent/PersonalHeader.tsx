@@ -49,7 +49,6 @@ export default class PersonalHeader extends React.PureComponent<Props, any> {
     componentDidMount() {
         AsyncStorage.getItem('userMsg').then(msg => {
             let userMsg = JSON.parse(msg);
-            console.log(userMsg);
             this.setState({
                 userMsg
             });
